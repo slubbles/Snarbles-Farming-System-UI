@@ -9,9 +9,10 @@ interface FarmGridProps {
   grid: FarmCell[][];
   onCellUpdate: (rowIndex: number, colIndex: number, newStatus: FarmCell['status']) => void;
   resources: { name: string; quantity: number }[];
+  children?: React.ReactNode; // Added children prop
 }
 
-const FarmGrid = ({ grid, onCellUpdate, resources }: FarmGridProps) => {
+const FarmGrid = ({ grid, onCellUpdate, resources, children }: FarmGridProps) => {
   const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
   
   const getStatusIcon = (status: FarmCell['status']) => {
@@ -113,6 +114,8 @@ const FarmGrid = ({ grid, onCellUpdate, resources }: FarmGridProps) => {
           ))
         ))}
       </div>
+      
+      {children} {/* Render children if provided */}
       
       <div className="text-sm text-muted-foreground mt-2">
         <div className="flex items-center gap-2 mb-1">
