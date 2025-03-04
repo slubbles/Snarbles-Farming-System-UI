@@ -1,0 +1,27 @@
+
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fields/Grid Pattern -->
+  <path d="M0 0 L800 0 L800 600 L0 600 Z" fill="#1A1A1A" />
+  <!-- Farm Plot Lines -->
+  <path d="M100 100 H700 M100 200 H700 M100 300 H700 M100 400 H700 M100 500 H700 M100 100 V500 M200 100 V500 M300 100 V500 M400 100 V500 M500 100 V500 M600 100 V500 M700 100 V500" stroke="#2A2A2A" stroke-width="2"/>
+  
+  <!-- Barn Silhouette -->
+  <path d="M650 250 L700 280 L700 400 L600 400 L600 280 Z" stroke="#333333" stroke-width="2"/>
+  <path d="M625 250 L675 225 L725 250" stroke="#333333" stroke-width="2"/>
+  
+  <!-- Tree Silhouettes -->
+  <circle cx="150" cy="150" r="25" fill="#222222"/>
+  <rect x="145" y="175" width="10" height="25" fill="#222222"/>
+  
+  <circle cx="750" cy="450" r="30" fill="#222222"/>
+  <rect x="745" y="480" width="10" height="30" fill="#222222"/>
+  
+  <!-- Crop Row Silhouettes -->
+  <path d="M200 350 Q210 335 220 350 Q230 335 240 350 Q250 335 260 350 Q270 335 280 350" stroke="#2A2A2A" stroke-width="2"/>
+  <path d="M300 350 Q310 335 320 350 Q330 335 340 350 Q350 335 360 350 Q370 335 380 350" stroke="#2A2A2A" stroke-width="2"/>
+  <path d="M400 350 Q410 335 420 350 Q430 335 440 350 Q450 335 460 350 Q470 335 480 350" stroke="#2A2A2A" stroke-width="2"/>
+  
+  <path d="M200 400 Q210 385 220 400 Q230 385 240 400 Q250 385 260 400 Q270 385 280 400" stroke="#2A2A2A" stroke-width="2"/>
+  <path d="M300 400 Q310 385 320 400 Q330 385 340 400 Q350 385 360 400 Q370 385 380 400" stroke="#2A2A2A" stroke-width="2"/>
+  <path d="M400 400 Q410 385 420 400 Q430 385 440 400 Q450 385 460 400 Q470 385 480 400" stroke="#2A2A2A" stroke-width="2"/>
+</svg>

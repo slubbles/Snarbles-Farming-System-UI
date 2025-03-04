@@ -21,7 +21,7 @@ const ProgressBar = ({
   return (
     <div className="space-y-1">
       {showText && (
-        <div className="flex justify-between text-xs font-medium">
+        <div className="flex justify-between text-xs font-medium text-muted-foreground">
           <span>{value.toLocaleString()}/{max.toLocaleString()}</span>
           <span>{Math.round(percentage)}%</span>
         </div>
@@ -30,7 +30,7 @@ const ProgressBar = ({
         <div 
           className={cn(
             "progress-bar",
-            variant === 'success' ? "bg-green-500" : "bg-snarbles-red",
+            variant === 'success' ? "bg-green-500" : "bg-primary",
             className
           )}
           style={{ width: `${percentage}%` }}

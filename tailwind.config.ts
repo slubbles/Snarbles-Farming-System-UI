@@ -20,16 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: [
-					"SF Pro Display",
-					"-apple-system",
-					"BlinkMacSystemFont",
-					"Segoe UI",
-					"Roboto",
-					"Helvetica Neue",
-					"Arial",
-					"sans-serif",
-				],
+				sans: ['Inter', 'sans-serif'],
+				heading: ['Readex Pro', 'sans-serif']
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -39,8 +31,9 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				snarbles: {
 					red: '#ea384c',
-					dark: '#000000',
-					light: '#FFFFFF',
+					dark: '#1A1A1A',
+					light: '#F5F5F5',
+					green: '#34C759',
 					gray: {
 						100: '#F6F6F7',
 						200: '#EAEAEB',
@@ -130,6 +123,14 @@ export default {
 					'0%': { transform: 'scale(0.8)', opacity: '0' },
 					'50%': { transform: 'scale(1.2)', opacity: '1' },
 					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'glow': {
+					'0%, 100%': { 
+						boxShadow: '0 0 10px rgba(52, 199, 89, 0.5)' 
+					},
+					'50%': { 
+						boxShadow: '0 0 20px rgba(52, 199, 89, 0.8)' 
+					}
 				}
 			},
 			animation: {
@@ -140,7 +141,8 @@ export default {
 				'slide-in': 'slide-in 0.4s ease-out',
 				'slide-out': 'slide-out 0.4s ease-out',
 				'pulse-scale': 'pulse-scale 2s infinite',
-				'point-earned': 'point-earned 0.5s ease-out forwards'
+				'point-earned': 'point-earned 0.5s ease-out forwards',
+				'glow': 'glow 2s infinite'
 			},
 			backdropBlur: {
 				xs: '2px',
