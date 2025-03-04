@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { User, Task, FarmStats, FarmCell, Resource } from '@/utils/types';
+import { User, Task, FarmStats as FarmStatsType, FarmCell, Resource } from '@/utils/types';
 import { currentUser as initialUser, tasks as initialTasks, farmStats as initialStats, calculateFarmingProgress } from '@/utils/taskData';
 import { saveUserData, saveTasks, saveFarmStats } from '@/utils/localStorage';
 import Header from '@/components/layout/Header';
@@ -13,8 +13,8 @@ import Notifications from '@/components/ui/notifications';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ProgressBar } from '@/components/ui/ProgressBar';
-import { Plant, ListTodo, BarChart3, GanttChart } from 'lucide-react';
+import ProgressBar from '@/components/ui/ProgressBar';
+import { Leaf, ListTodo, BarChart3, GanttChart } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import TaskList from '@/components/tasks/TaskList';
 import NewTaskDialog from '@/components/tasks/NewTaskDialog';
@@ -22,7 +22,7 @@ import NewTaskDialog from '@/components/tasks/NewTaskDialog';
 const Dashboard = () => {
   const [user, setUser] = useState<User>(initialUser);
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [stats, setStats] = useState<FarmStats[]>(initialStats);
+  const [stats, setStats] = useState<FarmStatsType[]>(initialStats);
   const [overallProgress, setOverallProgress] = useState<number>(0);
   
   // Initialize farm data
@@ -321,7 +321,7 @@ const Dashboard = () => {
         <Tabs defaultValue="farm">
           <TabsList className="mb-4">
             <TabsTrigger value="farm" className="interactive-element">
-              <Plant className="h-4 w-4 mr-2" />
+              <Leaf className="h-4 w-4 mr-2" />
               Farm
             </TabsTrigger>
             <TabsTrigger value="tasks" className="interactive-element">
@@ -458,7 +458,7 @@ const Dashboard = () => {
                           }
                         }}
                       >
-                        <Plant className="h-4 w-4 mr-2" /> Plant Next Available Plot
+                        <Leaf className="h-4 w-4 mr-2" /> Plant Next Available Plot
                       </Button>
                     </div>
                   </CardContent>

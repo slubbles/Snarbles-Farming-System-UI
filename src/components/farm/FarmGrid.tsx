@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { FarmCell } from '@/utils/types';
-import { ChevronRight, Droplets, Seedling, Sun, Clock } from 'lucide-react';
+import { ChevronRight, Droplet, Leaf, Sun, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 
@@ -17,9 +17,9 @@ const FarmGrid = ({ grid, onCellUpdate, resources }: FarmGridProps) => {
   const getStatusIcon = (status: FarmCell['status']) => {
     switch (status) {
       case 'planted':
-        return <Seedling className="h-6 w-6 text-primary/70" />;
+        return <Leaf className="h-6 w-6 text-primary/70" />;
       case 'growing':
-        return <Droplets className="h-6 w-6 text-primary/90" />;
+        return <Droplet className="h-6 w-6 text-primary/90" />;
       case 'ready':
         return <Sun className="h-6 w-6 text-primary animate-pulse" />;
       case 'harvested':
