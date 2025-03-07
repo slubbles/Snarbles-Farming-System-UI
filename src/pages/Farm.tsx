@@ -1,196 +1,146 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import React, { useState } from 'react';
+import { Layout } from "@/components/layout/Layout";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Header from '@/components/layout/Header';
-import FarmGrid from '@/components/farm/FarmGrid';
-import { FarmCell, FarmStats as FarmStatsType } from '@/utils/types';
-import ResourceManager from '@/components/farm/ResourceManager';
-import FarmStats from '@/components/farm/FarmStats';
-import StreakCounter from '@/components/farm/StreakCounter';
-import { Leaf, Droplet, Sun, Tractor } from 'lucide-react';
+import { FarmGrid } from "@/components/farm/FarmGrid";
+import { ResourceManager } from "@/components/farm/ResourceManager";
+import { FarmStats as FarmStatsComponent } from "@/components/farm/FarmStats";
+import { StreakCounter } from "@/components/farm/StreakCounter";
+import { DataControls } from "@/components/farm/DataControls";
+import { currentUser } from '@/utils/taskData';
+import { Resource, FarmStats } from '@/utils/types';
+import { Sparkles, Sprout, Plant, BarChart3 } from "lucide-react";
 
 const Farm = () => {
-  // Initialize farm grid
-  const [farmGrid, setFarmGrid] = useState<FarmCell[][]>(() => {
-    const savedGrid = localStorage.getItem('farmGrid');
-    if (savedGrid) {
-      try {
-        return JSON.parse(savedGrid);
-      } catch (e) {
-        console.error('Failed to parse saved farm grid:', e);
-      }
-    }
-    
-    // Default grid if no saved data
-    return Array(5).fill(0).map((_, rowIndex) => 
-      Array(5).fill(0).map((_, colIndex) => ({
-        id: `cell-${rowIndex}-${colIndex}`,
-        status: 'empty',
-        plantedAt: null,
-        harvestedAt: null
-      }))
-    );
-  });
-
-  // Initialize resources
-  const [resources, setResources] = useState(() => {
-    const savedResources = localStorage.getItem('farmResources');
-    if (savedResources) {
-      try {
-        return JSON.parse(savedResources);
-      } catch (e) {
-        console.error('Failed to parse saved resources:', e);
-      }
-    }
-    
-    // Default resources
-    return [
-      { name: 'Seeds', quantity: 10, icon: <Leaf className="h-5 w-5" /> },
-      { name: 'Water', quantity: 15, icon: <Droplet className="h-5 w-5" /> },
-      { name: 'Fertilizer', quantity: 5, icon: <Sun className="h-5 w-5" /> },
-      { name: 'Tools', quantity: 8, icon: <Tractor className="h-5 w-5" /> }
-    ];
-  });
-
-  // Save data to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem('farmGrid', JSON.stringify(farmGrid));
-    localStorage.setItem('farmResources', JSON.stringify(resources));
-  }, [farmGrid, resources]);
-
-  // Handle cell update
-  const handleCellUpdate = (rowIndex: number, colIndex: number, newStatus: FarmCell['status']) => {
-    const newGrid = [...farmGrid];
-    const now = new Date().toISOString();
-    
-    // Update cell status and timestamps
-    newGrid[rowIndex][colIndex] = {
-      ...newGrid[rowIndex][colIndex],
-      status: newStatus,
-      ...(newStatus === 'planted' && { plantedAt: now }),
-      ...(newStatus === 'harvested' && { harvestedAt: now })
-    };
-    
-    // Update resource quantities based on action
-    const newResources = [...resources];
-    const resourceUpdates = {
-      'empty': { name: 'Tools', change: -1 },
-      'planted': { name: 'Seeds', change: -1 },
-      'growing': { name: 'Water', change: -1 },
-      'ready': { name: '', change: 0 },
-      'harvested': { name: '', change: 0 }
-    };
-    
-    const { name, change } = resourceUpdates[newStatus];
-    if (name && change) {
-      const resourceIndex = newResources.findIndex(r => r.name === name);
-      if (resourceIndex >= 0) {
-        newResources[resourceIndex] = {
-          ...newResources[resourceIndex],
-          quantity: Math.max(0, newResources[resourceIndex].quantity + change)
-        };
-      }
-    }
-    
-    // If harvested, add to relevant resources
-    if (newStatus === 'harvested') {
-      const fertilizerIndex = newResources.findIndex(r => r.name === 'Fertilizer');
-      if (fertilizerIndex >= 0) {
-        newResources[fertilizerIndex] = {
-          ...newResources[fertilizerIndex],
-          quantity: newResources[fertilizerIndex].quantity + 1
-        };
-      }
-    }
-    
-    setFarmGrid(newGrid);
-    setResources(newResources);
+  const [resources, setResources] = useState<Resource[]>(currentUser.resources);
+  const [activeTab, setActiveTab] = useState("manage");
+  const [userStreak, setUserStreak] = useState(currentUser.streak);
+  
+  // Sample farm stats data
+  const mockFarmStats: FarmStats[] = [
+    { date: '2023-05-01', progress: 25, pointsEarned: 120 },
+    { date: '2023-05-02', progress: 30, pointsEarned: 150 },
+    { date: '2023-05-03', progress: 45, pointsEarned: 200 },
+    { date: '2023-05-04', progress: 60, pointsEarned: 250 },
+    { date: '2023-05-05', progress: 75, pointsEarned: 300 },
+    { date: '2023-05-06', progress: 80, pointsEarned: 320 },
+    { date: '2023-05-07', progress: 90, pointsEarned: 350 },
+  ];
+  
+  const [farmStatsData, setFarmStatsData] = useState<FarmStats[]>(mockFarmStats);
+  
+  // Farm stats summary
+  const farmSummary = {
+    planted: 12,
+    growing: 8,
+    ready: 3,
+    harvested: 5,
+    total: 28
   };
 
-  // Handle resource update - modifying to match the ResourceManager component's expected props
-  const handleResourceUpdate = (updatedResources) => {
+  const handleResourceUpdate = (name: string, change: number) => {
+    const updatedResources = resources.map(resource => {
+      if (resource.name === name) {
+        return { ...resource, quantity: Math.max(0, resource.quantity + change) };
+      }
+      return resource;
+    });
     setResources(updatedResources);
   };
 
-  // Calculate farm stats in the format expected by FarmStats component
-  const farmStatsData = [
-    {
-      date: new Date().toISOString().split('T')[0],
-      progress: Math.round((farmStats.harvested / farmStats.total) * 100),
-      pointsEarned: farmStats.harvested * 50
-    }
-  ];
-
   return (
-    <div className="min-h-screen farm-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 pt-24 pb-16">
-        <h1 className="text-3xl font-bold mb-6 font-heading">Your Farm</h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Farm Grid */}
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Farm Management</CardTitle>
-              <CardDescription>
-                Click on plots to plant, water, and harvest your crops
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="grid" className="w-full">
-                <TabsList className="grid grid-cols-2 mb-6">
-                  <TabsTrigger value="grid">Farm Grid</TabsTrigger>
-                  <TabsTrigger value="resources">Resources</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="grid" className="space-y-6">
-                  <FarmGrid 
-                    grid={farmGrid} 
-                    onCellUpdate={handleCellUpdate} 
-                    resources={resources}
-                  />
-                </TabsContent>
-                
-                <TabsContent value="resources" className="space-y-6">
-                  <ResourceManager 
-                    resources={resources} 
-                    onResourceUpdate={handleResourceUpdate} 
-                  />
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-          
-          {/* Stats Panel */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Farm Statistics</CardTitle>
-                <CardDescription>
-                  Track your farming progress
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FarmStats stats={farmStatsData} />
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Consistency</CardTitle>
-                <CardDescription>
-                  Your farming streak
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <StreakCounter streak={3} />
-              </CardContent>
-            </Card>
+    <Layout>
+      <div className="container mx-auto px-4 py-8 mt-16">
+        <div className="flex flex-col md:flex-row items-start justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">Farm Management</h1>
+            <p className="text-muted-foreground">Grow your virtual crops and earn points</p>
           </div>
         </div>
-      </main>
-    </div>
+
+        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full mb-8">
+          <TabsList className="mb-6">
+            <TabsTrigger value="manage" className="flex items-center">
+              <Plant className="mr-2 h-4 w-4" /> Manage Farm
+            </TabsTrigger>
+            <TabsTrigger value="stats" className="flex items-center">
+              <BarChart3 className="mr-2 h-4 w-4" /> Farm Stats
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="manage" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Your Farm</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <FarmGrid />
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" className="mr-2">
+                      <Sprout className="mr-2 h-4 w-4" /> Plant Seeds
+                    </Button>
+                    <Button variant="outline" className="mr-2">
+                      <Sparkles className="mr-2 h-4 w-4" /> Harvest Crops
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+              
+              <div>
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle>Resources</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResourceManager resources={resources} onUpdate={handleResourceUpdate} />
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Farming Streak</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <StreakCounter streak={userStreak} />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="stats">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Farm Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <FarmStatsComponent stats={farmStatsData} />
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div>
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle>Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <DataControls summary={farmSummary} />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </Layout>
   );
 };
 
