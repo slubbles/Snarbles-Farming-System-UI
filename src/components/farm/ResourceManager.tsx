@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Resource } from '@/utils/types';
 import { Plus, Minus, Trash2 } from 'lucide-react';

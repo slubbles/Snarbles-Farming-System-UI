@@ -1,6 +1,5 @@
-
 import { useNavigate } from 'react-router-dom';
-import { Farm, BarChart3, Trophy, ArrowRight, LucideSparkles, Seedling, Calendar } from 'lucide-react';
+import { Tractor, BarChart3, Trophy, ArrowRight, LucideSparkles, Leaf, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Header from '@/components/layout/Header';
@@ -12,7 +11,7 @@ const Homepage = () => {
   
   const features = [
     {
-      icon: <Farm className="h-10 w-10 text-primary" />,
+      icon: <Tractor className="h-10 w-10 text-primary" />,
       title: "Farm Management",
       description: "Plant, grow, and harvest crops in your virtual farm. Manage resources efficiently to maximize yield.",
       action: () => navigate('/farm')
@@ -75,7 +74,7 @@ const Homepage = () => {
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 interactive-element">
               <CardContent className="p-6">
                 <div className="flex flex-col items-center text-center">
-                  <Seedling className="h-8 w-8 text-primary mb-2" />
+                  <Leaf className="h-8 w-8 text-primary mb-2" />
                   <h3 className="text-lg font-semibold">Current Level</h3>
                   <p className="text-3xl font-bold mt-1">{currentUser.level}</p>
                 </div>
@@ -105,7 +104,7 @@ const Homepage = () => {
             <Card className="bg-card/50 backdrop-blur-sm border-primary/20 interactive-element">
               <CardContent className="p-6">
                 <div className="flex flex-col items-center text-center">
-                  <Farm className="h-8 w-8 text-primary mb-2" />
+                  <Tractor className="h-8 w-8 text-primary mb-2" />
                   <h3 className="text-lg font-semibold">Farm Score</h3>
                   <p className="text-3xl font-bold mt-1">78<span className="text-lg text-muted-foreground">/100</span></p>
                 </div>
@@ -196,7 +195,7 @@ const Homepage = () => {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center p-3 border-b border-border">
                         <div className="flex items-center gap-3">
-                          <Farm className="h-5 w-5 text-primary" />
+                          <Tractor className="h-5 w-5 text-primary" />
                           <span className="font-medium">Plant Wheat Seeds</span>
                         </div>
                         <span className="text-primary">+250 pts</span>

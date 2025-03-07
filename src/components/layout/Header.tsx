@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, CheckCircle, User, Menu, X, Trophy, Farm, LineChart } from 'lucide-react';
+import { Home, CheckCircle, User, Menu, X, Trophy, Tractor, LineChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { currentUser } from '@/utils/taskData';
 
@@ -13,7 +13,7 @@ const Header = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LineChart className="h-5 w-5" /> },
-    { name: 'Farm', path: '/farm', icon: <Farm className="h-5 w-5" /> },
+    { name: 'Farm', path: '/farm', icon: <Tractor className="h-5 w-5" /> },
     { name: 'Tasks', path: '/tasks', icon: <CheckCircle className="h-5 w-5" /> },
     { name: 'Leaderboard', path: '/leaderboard', icon: <Trophy className="h-5 w-5" /> },
     { name: 'Profile', path: '/profile', icon: <User className="h-5 w-5" /> },

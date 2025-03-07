@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { User, Task, FarmStats as FarmStatsType, FarmCell, Resource } from '@/utils/types';
 import { currentUser as initialUser, tasks as initialTasks, farmStats as initialStats, calculateFarmingProgress } from '@/utils/taskData';
@@ -25,12 +24,10 @@ const Dashboard = () => {
   const [stats, setStats] = useState<FarmStatsType[]>(initialStats);
   const [overallProgress, setOverallProgress] = useState<number>(0);
   
-  // Initialize farm data
   useEffect(() => {
     const progress = calculateFarmingProgress(tasks);
     setOverallProgress(progress);
     
-    // Update stats for today if not already present
     const today = new Date().toISOString().split('T')[0];
     if (!stats.some(stat => stat.date === today)) {
       const totalPointsToday = tasks.reduce((sum, task) => {
@@ -48,7 +45,6 @@ const Dashboard = () => {
     }
   }, []);
   
-  // Update cell in the farm grid
   const handleCellUpdate = (rowIndex: number, colIndex: number, newStatus: FarmCell['status']) => {
     const updatedGrid = [...user.farmGrid];
     updatedGrid[rowIndex][colIndex] = {
@@ -56,17 +52,30 @@ const Dashboard = () => {
       status: newStatus
     };
     
-    // If planting, set the planted date
     if (newStatus === 'planted') {
       updatedGrid[rowIndex][colIndex].plantedDate = new Date().toISOString();
     }
     
-    // If harvesting, set the harvest date
     if (newStatus === 'harvested') {
-      updatedGrid[rowIndex][colIndex].harvestDate = new Date().toISOString();
+      const updatedUser = {
+        ...user,
+        totalPoints: user.totalPoints + 50,
+        taskStats: {
+          ...user.taskStats,
+          totalEarned: user.taskStats.totalEarned + 50
+        },
+        farmGrid: updatedGrid
+      };
+      setUser(updatedUser);
+      saveUserData(updatedUser);
+      
+      toast({
+        title: "Harvested!",
+        description: "You earned 50 points for harvesting crops."
+      });
+      return;
     }
     
-    // Update resources based on actions
     let resourceToUpdate = '';
     let updatedResources = [...user.resources];
     
@@ -77,32 +86,11 @@ const Dashboard = () => {
       case 'growing':
         resourceToUpdate = 'Water';
         break;
-      case 'harvested':
-        // Add harvest points
-        const updatedUser = {
-          ...user,
-          totalPoints: user.totalPoints + 50,
-          taskStats: {
-            ...user.taskStats,
-            totalEarned: user.taskStats.totalEarned + 50
-          },
-          farmGrid: updatedGrid
-        };
-        setUser(updatedUser);
-        saveUserData(updatedUser);
-        
-        // Show harvest points notification
-        toast({
-          title: "Harvested!",
-          description: "You earned 50 points for harvesting crops."
-        });
-        return;
       case 'empty':
         resourceToUpdate = 'Tools';
         break;
     }
     
-    // Deduct resource if applicable
     if (resourceToUpdate) {
       updatedResources = updatedResources.map(resource => 
         resource.name === resourceToUpdate
@@ -111,7 +99,6 @@ const Dashboard = () => {
       );
     }
     
-    // Update user with new grid and resources
     const updatedUser = {
       ...user,
       farmGrid: updatedGrid,
@@ -121,12 +108,9 @@ const Dashboard = () => {
     setUser(updatedUser);
     saveUserData(updatedUser);
     
-    // Update farm stats
     const farmProgress = calculateFarmProgress(updatedGrid);
     setOverallProgress(farmProgress);
     
-    // Update today's stats
-    const today = new Date().toISOString().split('T')[0];
     const updatedStats = stats.map(stat => 
       stat.date === today ? { ...stat, progress: farmProgress } : stat
     );
@@ -135,7 +119,6 @@ const Dashboard = () => {
     saveFarmStats(updatedStats);
   };
   
-  // Calculate farm progress from grid
   const calculateFarmProgress = (grid: FarmCell[][]): number => {
     let total = 0;
     let valueMap = {
@@ -155,7 +138,6 @@ const Dashboard = () => {
     return Math.round(total / (grid.length * grid[0].length));
   };
   
-  // Update resources
   const handleResourceUpdate = (updatedResources: Resource[]) => {
     const updatedUser = {
       ...user,
@@ -166,7 +148,6 @@ const Dashboard = () => {
     saveUserData(updatedUser);
   };
   
-  // Update a task
   const handleTaskUpdate = (taskId: string, updatedTask: Partial<Task>) => {
     const updatedTasks = tasks.map(task => 
       task.id === taskId ? { ...task, ...updatedTask } : task
@@ -175,16 +156,13 @@ const Dashboard = () => {
     setTasks(updatedTasks);
     saveTasks(updatedTasks);
     
-    // Update overall progress
     const progress = calculateFarmingProgress(updatedTasks);
     setOverallProgress(progress);
     
-    // Check if a task was completed
     const taskWasCompleted = updatedTask.isCompleted && 
       !tasks.find(t => t.id === taskId)?.isCompleted;
     
     if (taskWasCompleted) {
-      // Update user stats
       const completedTask = updatedTasks.find(t => t.id === taskId);
       const pointsEarned = completedTask?.pointsEarned || 0;
       
@@ -202,7 +180,6 @@ const Dashboard = () => {
       setUser(updatedUser);
       saveUserData(updatedUser);
       
-      // Update today's stats
       const today = new Date().toISOString().split('T')[0];
       const todayStat = stats.find(stat => stat.date === today);
       
@@ -229,13 +206,11 @@ const Dashboard = () => {
     }
   };
   
-  // Add a new task
   const handleTaskAdd = (newTask: Task) => {
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
     saveTasks(updatedTasks);
     
-    // Update user stats
     const updatedUser = {
       ...user,
       taskStats: {
@@ -248,29 +223,17 @@ const Dashboard = () => {
     saveUserData(updatedUser);
   };
   
-  // Handle data import
   const handleDataImported = () => {
-    // Reload data from localStorage
     window.location.reload();
   };
   
-  // Handle data reset
   const handleDataReset = () => {
-    // Reload page to reset all state
     window.location.reload();
   };
   
   return (
     <div className="min-h-screen bg-background farm-background">
-      <Header>
-        <div className="flex items-center gap-2">
-          <Notifications tasks={tasks} />
-          <DataControls 
-            onDataImported={handleDataImported}
-            onDataReset={handleDataReset}
-          />
-        </div>
-      </Header>
+      <Header />
       
       <main className="container mx-auto px-4 pt-20 pb-16">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-6">
@@ -434,7 +397,6 @@ const Dashboard = () => {
                             return;
                           }
                           
-                          // Find first empty cell
                           let updated = false;
                           const updatedGrid = [...user.farmGrid];
                           

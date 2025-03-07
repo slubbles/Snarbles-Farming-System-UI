@@ -87,7 +87,7 @@ const achievements = [
 
 const Profile = () => {
   const [user, setUser] = useState({
-    username: currentUser.name,
+    username: currentUser.username,
     email: "user@example.com",
     level: currentUser.level,
     points: currentUser.totalPoints,

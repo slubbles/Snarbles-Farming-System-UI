@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from '@/components/layout/Header';
 import FarmGrid from '@/components/farm/FarmGrid';
-import { FarmCell } from '@/utils/types';
+import { FarmCell, FarmStats as FarmStatsType } from '@/utils/types';
 import ResourceManager from '@/components/farm/ResourceManager';
 import FarmStats from '@/components/farm/FarmStats';
 import StreakCounter from '@/components/farm/StreakCounter';
@@ -108,25 +107,19 @@ const Farm = () => {
     setResources(newResources);
   };
 
-  // Handle resource update
-  const handleResourceUpdate = (name: string, change: number) => {
-    setResources(prevResources => 
-      prevResources.map(resource => 
-        resource.name === name 
-          ? { ...resource, quantity: Math.max(0, resource.quantity + change) } 
-          : resource
-      )
-    );
+  // Handle resource update - modifying to match the ResourceManager component's expected props
+  const handleResourceUpdate = (updatedResources) => {
+    setResources(updatedResources);
   };
 
-  // Calculate farm stats
-  const farmStats = {
-    planted: farmGrid.flat().filter(cell => cell.status === 'planted').length,
-    growing: farmGrid.flat().filter(cell => cell.status === 'growing').length,
-    ready: farmGrid.flat().filter(cell => cell.status === 'ready').length,
-    harvested: farmGrid.flat().filter(cell => cell.status === 'harvested').length,
-    total: farmGrid.flat().length
-  };
+  // Calculate farm stats in the format expected by FarmStats component
+  const farmStatsData = [
+    {
+      date: new Date().toISOString().split('T')[0],
+      progress: Math.round((farmStats.harvested / farmStats.total) * 100),
+      pointsEarned: farmStats.harvested * 50
+    }
+  ];
 
   return (
     <div className="min-h-screen farm-background">
@@ -162,7 +155,7 @@ const Farm = () => {
                 <TabsContent value="resources" className="space-y-6">
                   <ResourceManager 
                     resources={resources} 
-                    onUpdate={handleResourceUpdate} 
+                    onResourceUpdate={handleResourceUpdate} 
                   />
                 </TabsContent>
               </Tabs>
@@ -179,7 +172,7 @@ const Farm = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <FarmStats stats={farmStats} />
+                <FarmStats stats={farmStatsData} />
               </CardContent>
             </Card>
             
@@ -191,7 +184,7 @@ const Farm = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <StreakCounter />
+                <StreakCounter streak={3} />
               </CardContent>
             </Card>
           </div>
