@@ -5,6 +5,7 @@ import { Home, CheckCircle, User, Menu, X, Trophy, Tractor, LineChart } from 'lu
 import { cn } from '@/lib/utils';
 import { currentUser } from '@/utils/taskData';
 import Logo from './Logo';
+import WalletConnect from '@/components/wallet/WalletConnect';
 
 const Header = () => {
   const location = useLocation();
@@ -57,6 +58,11 @@ const Header = () => {
             </ul>
           </nav>
 
+          {/* Wallet Connect */}
+          <div className="hidden md:block">
+            <WalletConnect />
+          </div>
+
           {/* Mobile Menu Button */}
           <button
             className="md:hidden text-foreground focus:outline-none"
@@ -81,7 +87,7 @@ const Header = () => {
                 <Link
                   to={item.path}
                   className={cn(
-                    "flex items-center space-x-3 py-4 border-b border-border",
+                    "flex items-center space-x-3 py-4 border-b border-border last:border-none",
                     isActive(item.path)
                       ? "text-[#2DB87F] font-medium"
                       : "text-muted-foreground"
@@ -93,6 +99,9 @@ const Header = () => {
                 </Link>
               </li>
             ))}
+            <li className="py-4">
+              <WalletConnect />
+            </li>
           </ul>
         </nav>
       )}

@@ -176,9 +176,7 @@ const Farm = () => {
                     <CardTitle>Summary</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <DataControls 
-                      data={farmSummary}
-                    />
+                    <DataControls data={farmSummary} />
                   </CardContent>
                 </Card>
               </div>
