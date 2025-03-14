@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import { CheckCircle, ArrowRight, Tractor, LineChart, Trophy } from "lucide-reac
 import { currentUser, tasks } from '@/utils/taskData';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { FarmGrid } from '@/components/farm/FarmGrid';
+import FarmGrid from '@/components/farm/FarmGrid';
 
 const Dashboard = () => {
   const today = new Date();
@@ -25,7 +26,7 @@ const Dashboard = () => {
             </p>
           </div>
           <div className="mt-4 md:mt-0">
-            <Button asChild>
+            <Button className="bg-gradient-to-r from-[#2DB87F] to-[#0D6B36] hover:opacity-90" asChild>
               <Link to="/tasks">View All Tasks</Link>
             </Button>
           </div>
@@ -89,9 +90,9 @@ const Dashboard = () => {
                   <div className="text-sm text-muted-foreground mb-2">
                     Progress: {task.progress}%
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                  <div className="w-full bg-gray-700 rounded-full h-2.5">
                     <div
-                      className="bg-green-500 h-2.5 rounded-full"
+                      className="bg-gradient-to-r from-[#2DB87F] to-[#0D6B36] h-2.5 rounded-full"
                       style={{ width: `${task.progress}%` }}
                     ></div>
                   </div>

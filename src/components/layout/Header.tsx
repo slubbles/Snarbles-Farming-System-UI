@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, CheckCircle, User, Menu, X, Trophy, Tractor, LineChart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { currentUser } from '@/utils/taskData';
+import Logo from './Logo';
 
 const Header = () => {
   const location = useLocation();
@@ -27,8 +28,8 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-foreground">Snarbles</span>
-              <div className="point-badge animate-pulse-scale ml-2">
+              <Logo />
+              <div className="point-badge animate-pulse-scale ml-2 bg-gradient-to-r from-[#2DB87F] to-[#0D6B36]">
                 {currentUser.totalPoints.toLocaleString()} pts
               </div>
             </Link>
@@ -44,7 +45,7 @@ const Header = () => {
                     className={cn(
                       "flex items-center space-x-1 py-2 transition-all duration-200",
                       isActive(item.path)
-                        ? "text-primary font-medium"
+                        ? "text-[#2DB87F] font-medium"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
@@ -82,7 +83,7 @@ const Header = () => {
                   className={cn(
                     "flex items-center space-x-3 py-4 border-b border-border",
                     isActive(item.path)
-                      ? "text-primary font-medium"
+                      ? "text-[#2DB87F] font-medium"
                       : "text-muted-foreground"
                   )}
                   onClick={() => setMobileMenuOpen(false)}

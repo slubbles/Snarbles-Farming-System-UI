@@ -1,17 +1,17 @@
 
 import React, { useState } from 'react';
-import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FarmGrid } from "@/components/farm/FarmGrid";
-import { ResourceManager } from "@/components/farm/ResourceManager";
-import { FarmStats as FarmStatsComponent } from "@/components/farm/FarmStats";
-import { StreakCounter } from "@/components/farm/StreakCounter";
-import { DataControls } from "@/components/farm/DataControls";
+import FarmGrid from "@/components/farm/FarmGrid";
+import ResourceManager from "@/components/farm/ResourceManager";
+import FarmStats from "@/components/farm/FarmStats";
+import StreakCounter from "@/components/farm/StreakCounter";
+import DataControls from "@/components/farm/DataControls";
 import { currentUser } from '@/utils/taskData';
-import { Resource, FarmStats } from '@/utils/types';
-import { Sparkles, Sprout, Plant, BarChart3 } from "lucide-react";
+import { Resource, FarmStats as FarmStatsType } from '@/utils/types';
+import { Sparkles, Sprout, BarChart3 } from "lucide-react";
 
 const Farm = () => {
   const [resources, setResources] = useState<Resource[]>(currentUser.resources);
@@ -19,7 +19,7 @@ const Farm = () => {
   const [userStreak, setUserStreak] = useState(currentUser.streak);
   
   // Sample farm stats data
-  const mockFarmStats: FarmStats[] = [
+  const mockFarmStats: FarmStatsType[] = [
     { date: '2023-05-01', progress: 25, pointsEarned: 120 },
     { date: '2023-05-02', progress: 30, pointsEarned: 150 },
     { date: '2023-05-03', progress: 45, pointsEarned: 200 },
@@ -29,7 +29,7 @@ const Farm = () => {
     { date: '2023-05-07', progress: 90, pointsEarned: 350 },
   ];
   
-  const [farmStatsData, setFarmStatsData] = useState<FarmStats[]>(mockFarmStats);
+  const [farmStatsData, setFarmStatsData] = useState<FarmStatsType[]>(mockFarmStats);
   
   // Farm stats summary
   const farmSummary = {
@@ -63,7 +63,7 @@ const Farm = () => {
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full mb-8">
           <TabsList className="mb-6">
             <TabsTrigger value="manage" className="flex items-center">
-              <Plant className="mr-2 h-4 w-4" /> Manage Farm
+              <Sprout className="mr-2 h-4 w-4" /> Manage Farm
             </TabsTrigger>
             <TabsTrigger value="stats" className="flex items-center">
               <BarChart3 className="mr-2 h-4 w-4" /> Farm Stats
@@ -81,10 +81,16 @@ const Farm = () => {
                     <FarmGrid />
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" className="mr-2">
+                    <Button 
+                      variant="outline" 
+                      className="mr-2 border-[#2DB87F] text-[#2DB87F] hover:bg-[#2DB87F]/10"
+                    >
                       <Sprout className="mr-2 h-4 w-4" /> Plant Seeds
                     </Button>
-                    <Button variant="outline" className="mr-2">
+                    <Button 
+                      variant="outline" 
+                      className="mr-2 border-[#2DB87F] text-[#2DB87F] hover:bg-[#2DB87F]/10"
+                    >
                       <Sparkles className="mr-2 h-4 w-4" /> Harvest Crops
                     </Button>
                   </CardFooter>
@@ -97,7 +103,10 @@ const Farm = () => {
                     <CardTitle>Resources</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ResourceManager resources={resources} onUpdate={handleResourceUpdate} />
+                    <ResourceManager 
+                      resources={resources} 
+                      onUpdateResource={handleResourceUpdate} 
+                    />
                   </CardContent>
                 </Card>
                 
@@ -106,7 +115,9 @@ const Farm = () => {
                     <CardTitle>Farming Streak</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <StreakCounter streak={userStreak} />
+                    <StreakCounter 
+                      streak={userStreak}
+                    />
                   </CardContent>
                 </Card>
               </div>
@@ -121,7 +132,9 @@ const Farm = () => {
                     <CardTitle>Farm Performance</CardTitle>
                   </CardHeader>
                   <CardContent className="pt-4">
-                    <FarmStatsComponent stats={farmStatsData} />
+                    <FarmStats 
+                      stats={farmStatsData}
+                    />
                   </CardContent>
                 </Card>
               </div>
@@ -132,7 +145,9 @@ const Farm = () => {
                     <CardTitle>Summary</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <DataControls summary={farmSummary} />
+                    <DataControls 
+                      summary={farmSummary}
+                    />
                   </CardContent>
                 </Card>
               </div>
