@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Resource } from '@/utils/types';
 import { Plus, Minus, Trash2 } from 'lucide-react';
@@ -7,10 +8,11 @@ import { toast } from '@/components/ui/use-toast';
 
 interface ResourceManagerProps {
   resources: Resource[];
+  onUpdate?: (name: string, change: number) => void;
   onResourceUpdate: (updatedResources: Resource[]) => void;
 }
 
-const ResourceManager = ({ resources, onResourceUpdate }: ResourceManagerProps) => {
+const ResourceManager = ({ resources, onUpdate, onResourceUpdate }: ResourceManagerProps) => {
   const [newResourceName, setNewResourceName] = useState('');
   
   const incrementResource = (id: string) => {
@@ -20,6 +22,14 @@ const ResourceManager = ({ resources, onResourceUpdate }: ResourceManagerProps) 
         : resource
     );
     onResourceUpdate(updatedResources);
+    
+    // Call the onUpdate prop if it exists
+    if (onUpdate) {
+      const resource = resources.find(r => r.id === id);
+      if (resource) {
+        onUpdate(resource.name, 1);
+      }
+    }
   };
   
   const decrementResource = (id: string) => {
@@ -29,6 +39,14 @@ const ResourceManager = ({ resources, onResourceUpdate }: ResourceManagerProps) 
         : resource
     );
     onResourceUpdate(updatedResources);
+    
+    // Call the onUpdate prop if it exists
+    if (onUpdate) {
+      const resource = resources.find(r => r.id === id);
+      if (resource) {
+        onUpdate(resource.name, -1);
+      }
+    }
   };
   
   const deleteResource = (id: string) => {

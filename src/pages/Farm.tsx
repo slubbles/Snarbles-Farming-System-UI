@@ -41,7 +41,11 @@ const Farm = () => {
     total: 28
   };
 
-  const handleResourceUpdate = (name: string, change: number) => {
+  const handleResourceUpdate = (updatedResources: Resource[]) => {
+    setResources(updatedResources);
+  };
+
+  const handleResourceChange = (name: string, change: number) => {
     const updatedResources = resources.map(resource => {
       if (resource.name === name) {
         return { ...resource, quantity: Math.max(0, resource.quantity + change) };
@@ -61,14 +65,14 @@ const Farm = () => {
     
     // Update resources based on action
     if (newStatus === 'planted') {
-      handleResourceUpdate('Seeds', -1);
+      handleResourceChange('Seeds', -1);
     } else if (newStatus === 'growing') {
-      handleResourceUpdate('Water', -1);
+      handleResourceChange('Water', -1);
     } else if (newStatus === 'harvested') {
       // Award points for harvesting
       // This would typically involve a server call or blockchain transaction
     } else if (newStatus === 'empty') {
-      handleResourceUpdate('Tools', -1);
+      handleResourceChange('Tools', -1);
     }
   };
 
@@ -131,7 +135,8 @@ const Farm = () => {
                   <CardContent>
                     <ResourceManager 
                       resources={resources} 
-                      onUpdate={handleResourceUpdate} 
+                      onResourceUpdate={handleResourceUpdate}
+                      onUpdate={handleResourceChange}
                     />
                   </CardContent>
                 </Card>
