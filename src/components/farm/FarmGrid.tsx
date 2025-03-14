@@ -6,14 +6,25 @@ import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 
 interface FarmGridProps {
-  grid: FarmCell[][];
-  onCellUpdate: (rowIndex: number, colIndex: number, newStatus: FarmCell['status']) => void;
-  resources: { name: string; quantity: number }[];
-  children?: React.ReactNode; // Added children prop
+  grid?: FarmCell[][];
+  onCellUpdate?: (rowIndex: number, colIndex: number, newStatus: FarmCell['status']) => void;
+  resources?: { name: string; quantity: number }[];
 }
 
-const FarmGrid = ({ grid, onCellUpdate, resources, children }: FarmGridProps) => {
+const FarmGrid = ({ grid, onCellUpdate, resources }: FarmGridProps) => {
   const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
+  
+  // Sample grid if none provided
+  const defaultGrid: FarmCell[][] = Array(5).fill(0).map((_, rowIndex) => 
+    Array(5).fill(0).map((_, colIndex) => ({
+      id: `cell-${rowIndex}-${colIndex}`,
+      status: ['empty', 'planted', 'growing', 'ready', 'harvested'][
+        Math.floor(Math.random() * 5)
+      ] as FarmCell['status']
+    }))
+  );
+  
+  const farmGrid = grid || defaultGrid;
   
   const getStatusIcon = (status: FarmCell['status']) => {
     switch (status) {
@@ -33,7 +44,9 @@ const FarmGrid = ({ grid, onCellUpdate, resources, children }: FarmGridProps) =>
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     setSelectedCell({row: rowIndex, col: colIndex});
     
-    const currentStatus = grid[rowIndex][colIndex].status;
+    if (!onCellUpdate || !resources) return;
+    
+    const currentStatus = farmGrid[rowIndex][colIndex].status;
     let nextStatus: FarmCell['status'] = 'empty';
     let actionMessage = '';
     let needsResources = false;
@@ -97,7 +110,7 @@ const FarmGrid = ({ grid, onCellUpdate, resources, children }: FarmGridProps) =>
       <h3 className="text-xl font-heading font-semibold">Farm Plot</h3>
       
       <div className="grid grid-cols-5 gap-2">
-        {grid.map((row, rowIndex) => (
+        {farmGrid.map((row, rowIndex) => (
           row.map((cell, colIndex) => (
             <button
               key={cell.id}
@@ -114,8 +127,6 @@ const FarmGrid = ({ grid, onCellUpdate, resources, children }: FarmGridProps) =>
           ))
         ))}
       </div>
-      
-      {children} {/* Render children if provided */}
       
       <div className="text-sm text-muted-foreground mt-2">
         <div className="flex items-center gap-2 mb-1">

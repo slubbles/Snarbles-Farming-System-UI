@@ -130,7 +130,7 @@ const Dashboard = () => {
                 <CardDescription>Current crops and growth status</CardDescription>
               </CardHeader>
               <CardContent>
-                <FarmGrid />
+                <FarmGrid grid={currentUser.farmGrid} />
               </CardContent>
             </Card>
             

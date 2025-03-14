@@ -10,13 +10,14 @@ import FarmStats from "@/components/farm/FarmStats";
 import StreakCounter from "@/components/farm/StreakCounter";
 import DataControls from "@/components/farm/DataControls";
 import { currentUser } from '@/utils/taskData';
-import { Resource, FarmStats as FarmStatsType } from '@/utils/types';
+import { Resource, FarmStats as FarmStatsType, FarmCell } from '@/utils/types';
 import { Sparkles, Sprout, BarChart3 } from "lucide-react";
 
 const Farm = () => {
   const [resources, setResources] = useState<Resource[]>(currentUser.resources);
   const [activeTab, setActiveTab] = useState("manage");
   const [userStreak, setUserStreak] = useState(currentUser.streak);
+  const [farmGrid, setFarmGrid] = useState<FarmCell[][]>(currentUser.farmGrid);
   
   // Sample farm stats data
   const mockFarmStats: FarmStatsType[] = [
@@ -50,6 +51,27 @@ const Farm = () => {
     setResources(updatedResources);
   };
 
+  const handleCellUpdate = (rowIndex: number, colIndex: number, newStatus: FarmCell['status']) => {
+    const newGrid = [...farmGrid];
+    newGrid[rowIndex][colIndex] = {
+      ...newGrid[rowIndex][colIndex],
+      status: newStatus
+    };
+    setFarmGrid(newGrid);
+    
+    // Update resources based on action
+    if (newStatus === 'planted') {
+      handleResourceUpdate('Seeds', -1);
+    } else if (newStatus === 'growing') {
+      handleResourceUpdate('Water', -1);
+    } else if (newStatus === 'harvested') {
+      // Award points for harvesting
+      // This would typically involve a server call or blockchain transaction
+    } else if (newStatus === 'empty') {
+      handleResourceUpdate('Tools', -1);
+    }
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8 mt-16">
@@ -78,7 +100,11 @@ const Farm = () => {
                     <CardTitle>Your Farm</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <FarmGrid />
+                    <FarmGrid 
+                      grid={farmGrid}
+                      onCellUpdate={handleCellUpdate}
+                      resources={resources}
+                    />
                   </CardContent>
                   <CardFooter>
                     <Button 
@@ -105,7 +131,7 @@ const Farm = () => {
                   <CardContent>
                     <ResourceManager 
                       resources={resources} 
-                      onUpdateResource={handleResourceUpdate} 
+                      onUpdate={handleResourceUpdate} 
                     />
                   </CardContent>
                 </Card>
@@ -146,7 +172,7 @@ const Farm = () => {
                   </CardHeader>
                   <CardContent>
                     <DataControls 
-                      summary={farmSummary}
+                      data={farmSummary}
                     />
                   </CardContent>
                 </Card>
