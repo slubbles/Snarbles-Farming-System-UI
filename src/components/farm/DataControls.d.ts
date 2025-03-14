@@ -1,6 +1,6 @@
 
 export interface DataControlsProps {
-  data: {
+  farmData: {
     planted: number;
     growing: number;
     ready: number;

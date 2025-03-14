@@ -1,248 +1,343 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Header from '@/components/layout/Header';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, TrendingUp, Calendar, Medal } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/layout/Layout";
+import { Trophy, Medal, Star, ArrowUp, ArrowDown, Minus, Users, Calendar, Award } from "lucide-react";
+import { currentUser } from '@/utils/taskData';
 import { cn } from '@/lib/utils';
-import ProgressBar from '@/components/ui/ProgressBar';
 
-// Mock leaderboard data
-const mockLeaderboardData = [
-  { id: 1, username: "FarmMaster", points: 12560, level: 28, streak: 45, avatar: "/placeholder.svg" },
-  { id: 2, username: "CropKing", points: 10890, level: 25, streak: 32, avatar: "/placeholder.svg" },
-  { id: 3, username: "GreenThumb", points: 9750, level: 23, streak: 29, avatar: "/placeholder.svg" },
-  { id: 4, username: "HarvestQueen", points: 8900, level: 22, streak: 21, avatar: "/placeholder.svg" },
-  { id: 5, username: "SeedSower", points: 7650, level: 19, streak: 18, avatar: "/placeholder.svg" },
-  { id: 6, username: "PlantWhisperer", points: 6540, level: 17, streak: 14, avatar: "/placeholder.svg" },
-  { id: 7, username: "FieldHand", points: 5890, level: 15, streak: 12, avatar: "/placeholder.svg" },
-  { id: 8, username: "CropCrusader", points: 4780, level: 13, streak: 10, avatar: "/placeholder.svg" },
-  { id: 9, username: "SoilStrategist", points: 3600, level: 10, streak: 7, avatar: "/placeholder.svg" },
-  { id: 10, username: "SproutSpotter", points: 2500, level: 8, streak: 5, avatar: "/placeholder.svg" },
+// Mock data for the leaderboard
+const leaderboardData = [
+  { id: 1, rank: 1, username: "FarmKing", walletAddress: "0x8d3...f29e", points: 12500, level: 25, change: 0, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=FarmKing" },
+  { id: 2, rank: 2, username: "CropMaster", walletAddress: "0x7c2...d37a", points: 11800, level: 22, change: 1, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=CropMaster" },
+  { id: 3, rank: 3, username: "HarvestQueen", walletAddress: "0x6b1...8c4d", points: 11200, level: 21, change: -1, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=HarvestQueen" },
+  { id: 4, rank: 4, username: "SeedWhisperer", walletAddress: "0x5a0...7b3c", points: 10900, level: 20, change: 2, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=SeedWhisperer" },
+  { id: 5, rank: 5, username: "GreenThumb", walletAddress: "0x4f9...6a2b", points: 10500, level: 19, change: 0, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=GreenThumb" },
+  { id: 6, rank: 6, username: "PlotPlanner", walletAddress: "0x3e8...5f1a", points: 10200, level: 18, change: -2, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=PlotPlanner" },
+  { id: 7, rank: 7, username: "SoilSage", walletAddress: "0x2d7...4e09", points: 9800, level: 18, change: 1, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=SoilSage" },
+  { id: 8, rank: 8, username: "CropCrusader", walletAddress: "0x1c6...3d98", points: 9500, level: 17, change: 0, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=CropCrusader" },
+  { id: 9, rank: 9, username: "FarmingFanatic", walletAddress: "0x0b5...2c87", points: 9200, level: 17, change: -1, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=FarmingFanatic" },
+  { id: 10, rank: 10, username: "PlantPioneer", walletAddress: "0xa4...1b76", points: 8900, level: 16, change: 3, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=PlantPioneer" },
+  // Add current user at position 42
+  { id: 11, rank: 42, username: currentUser.username, walletAddress: "0xYourWallet", points: currentUser.totalPoints, level: currentUser.level, change: 5, avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=YourUsername" },
 ];
 
-// Mock weekly leaders
-const mockWeeklyLeaders = [
-  { id: 3, username: "GreenThumb", points: 1250, avatar: "/placeholder.svg" },
-  { id: 7, username: "FieldHand", points: 980, avatar: "/placeholder.svg" },
-  { id: 2, username: "CropKing", points: 870, avatar: "/placeholder.svg" },
-];
-
-// Mock monthly leaders
-const mockMonthlyLeaders = [
-  { id: 1, username: "FarmMaster", points: 4320, avatar: "/placeholder.svg" },
-  { id: 2, username: "CropKing", points: 3890, avatar: "/placeholder.svg" },
-  { id: 4, username: "HarvestQueen", points: 2780, avatar: "/placeholder.svg" },
-];
-
-const LeaderboardTable = ({ data, timeframe }: { data: typeof mockLeaderboardData, timeframe: string }) => {
-  return (
-    <div className="space-y-6">
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-border/50">
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Rank</th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Farmer</th>
-              <th className="px-4 py-3 text-right font-medium text-muted-foreground">Points</th>
-              {timeframe === 'all-time' && (
-                <>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">Level</th>
-                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">Streak</th>
-                </>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((user, index) => (
-              <tr 
-                key={user.id}
-                className={cn(
-                  "border-b border-border/30 transition-colors hover:bg-card/60",
-                  index < 3 && "bg-card/40"
-                )}
-              >
-                <td className="px-4 py-3">
-                  <div className="flex items-center">
-                    {index === 0 ? (
-                      <Trophy className="h-5 w-5 text-yellow-500 mr-1" />
-                    ) : index === 1 ? (
-                      <Medal className="h-5 w-5 text-gray-300 mr-1" />
-                    ) : index === 2 ? (
-                      <Medal className="h-5 w-5 text-amber-700 mr-1" />
-                    ) : (
-                      <span className="font-mono w-5 text-center mr-1">{index + 1}</span>
-                    )}
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.avatar} alt={user.username} />
-                      <AvatarFallback className="bg-primary/20 text-primary-foreground">
-                        {user.username.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="font-medium">{user.username}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-right font-medium">
-                  {user.points.toLocaleString()}
-                </td>
-                {timeframe === 'all-time' && (
-                  <>
-                    <td className="px-4 py-3 text-right font-medium">
-                      {user.level}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Calendar className="h-4 w-4 text-primary/70" />
-                        <span>{user.streak}</span>
-                      </div>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+const RankChangeIndicator = ({ change }: { change: number }) => {
+  if (change > 0) {
+    return <div className="flex items-center text-green-500"><ArrowUp className="h-4 w-4 mr-1" />{change}</div>;
+  } else if (change < 0) {
+    return <div className="flex items-center text-red-500"><ArrowDown className="h-4 w-4 mr-1" />{Math.abs(change)}</div>;
+  } else {
+    return <div className="flex items-center text-muted-foreground"><Minus className="h-4 w-4 mr-1" />0</div>;
+  }
 };
 
 const Leaderboard = () => {
-  const [leaderboardData, setLeaderboardData] = useState(mockLeaderboardData);
-  const [weeklyLeaders, setWeeklyLeaders] = useState(mockWeeklyLeaders);
-  const [monthlyLeaders, setMonthlyLeaders] = useState(mockMonthlyLeaders);
-  
+  const [timeframe, setTimeframe] = useState<'weekly' | 'monthly' | 'allTime'>('weekly');
+
+  const getUserRank = () => {
+    return leaderboardData.find(user => user.username === currentUser.username)?.rank || 0;
+  };
+
   return (
-    <div className="min-h-screen farm-background">
-      <Header />
-      
-      <main className="container mx-auto px-4 pt-24 pb-16">
-        <h1 className="text-3xl font-bold mb-6 font-heading">Leaderboard</h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="interactive-element">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">Weekly Leaders</CardTitle>
-                <Calendar className="h-5 w-5 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              {weeklyLeaders.map((leader, index) => (
-                <div key={leader.id} className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <div className="flex justify-center items-center w-6 h-6 rounded-full bg-primary/20 text-primary font-semibold text-xs">
-                      {index + 1}
-                    </div>
-                    <span className="font-medium">{leader.username}</span>
-                  </div>
-                  <span className="text-muted-foreground">{leader.points.toLocaleString()} pts</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-          
-          <Card className="interactive-element">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">Monthly Leaders</CardTitle>
-                <TrendingUp className="h-5 w-5 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              {monthlyLeaders.map((leader, index) => (
-                <div key={leader.id} className="flex items-center justify-between py-2">
-                  <div className="flex items-center gap-3">
-                    <div className="flex justify-center items-center w-6 h-6 rounded-full bg-primary/20 text-primary font-semibold text-xs">
-                      {index + 1}
-                    </div>
-                    <span className="font-medium">{leader.username}</span>
-                  </div>
-                  <span className="text-muted-foreground">{leader.points.toLocaleString()} pts</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-          
-          <Card className="interactive-element">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">Your Position</CardTitle>
-                <Trophy className="h-5 w-5 text-amber-500" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Current Rank</span>
-                  <span className="font-semibold text-lg">#4</span>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Distance to #3</span>
-                    <span>850 points</span>
-                  </div>
-                  <ProgressBar value={8050} max={9750} />
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Your Score: 8,900</span>
-                  <span>Next Rank: 9,750</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+    <Layout>
+      <div className="container mx-auto px-4 py-8 mt-16">
+        <div className="flex flex-col md:flex-row items-start justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold font-heading">Leaderboard</h1>
+            <p className="text-muted-foreground">
+              Compete with other farmers and climb the ranks
+            </p>
+          </div>
         </div>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Farmers Ranking</CardTitle>
-            <CardDescription>
-              See how you stack up against other farmers
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="all-time" className="w-full">
-              <TabsList className="grid grid-cols-3 mb-6">
-                <TabsTrigger value="all-time">All Time</TabsTrigger>
-                <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                <TabsTrigger value="monthly">Monthly</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="all-time">
-                <LeaderboardTable data={leaderboardData} timeframe="all-time" />
-              </TabsContent>
-              
-              <TabsContent value="weekly">
-                <LeaderboardTable 
-                  data={weeklyLeaders.map((user, index) => ({
-                    ...user,
-                    level: Math.floor(user.points / 500) + 1,
-                    streak: Math.floor(Math.random() * 7) + 1
-                  }))} 
-                  timeframe="weekly" 
-                />
-              </TabsContent>
-              
-              <TabsContent value="monthly">
-                <LeaderboardTable 
-                  data={monthlyLeaders.map((user, index) => ({
-                    ...user,
-                    level: Math.floor(user.points / 500) + 1,
-                    streak: Math.floor(Math.random() * 30) + 1
-                  }))} 
-                  timeframe="monthly" 
-                />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+
+        {/* Your Rank Card */}
+        <section className="mb-8">
+          <Card className="bg-gradient-to-r from-[#2DB87F]/10 to-[#0D6B36]/10 border-[#2DB87F]/30">
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row items-center justify-between">
+                <div className="flex items-center mb-4 md:mb-0">
+                  <div className="relative">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#2DB87F]">
+                      <img 
+                        src="https://api.dicebear.com/7.x/bottts/svg?seed=YourUsername" 
+                        alt={currentUser.username} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 bg-[#2DB87F] rounded-full p-1">
+                      <Trophy className="h-5 w-5 text-white" />
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h2 className="text-xl font-semibold">{currentUser.username}</h2>
+                    <p className="text-muted-foreground text-sm">Your current rank: #{getUserRank()}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <div className="text-2xl font-bold text-[#2DB87F]">{currentUser.totalPoints.toLocaleString()} pts</div>
+                  <div className="flex items-center text-green-500 text-sm">
+                    <ArrowUp className="h-4 w-4 mr-1" />5 ranks this week
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Leaderboard Tabs */}
+        <Tabs defaultValue="weekly" className="w-full">
+          <TabsList className="grid grid-cols-3 mb-6">
+            <TabsTrigger 
+              value="weekly" 
+              onClick={() => setTimeframe('weekly')}
+              className="data-[state=active]:bg-[#2DB87F] data-[state=active]:text-white"
+            >
+              Weekly
+            </TabsTrigger>
+            <TabsTrigger 
+              value="monthly" 
+              onClick={() => setTimeframe('monthly')}
+              className="data-[state=active]:bg-[#2DB87F] data-[state=active]:text-white"
+            >
+              Monthly
+            </TabsTrigger>
+            <TabsTrigger 
+              value="allTime" 
+              onClick={() => setTimeframe('allTime')}
+              className="data-[state=active]:bg-[#2DB87F] data-[state=active]:text-white"
+            >
+              All Time
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Leaderboard Content - Same for all tabs in this mock */}
+          <TabsContent value="weekly" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center">
+                    <Trophy className="mr-2 h-5 w-5 text-amber-500" />
+                    Top Farmers
+                  </CardTitle>
+                  <CardDescription className="flex items-center">
+                    <Calendar className="mr-1 h-4 w-4" />
+                    This Week
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left py-3 px-4 font-medium text-muted-foreground">Rank</th>
+                        <th className="text-left py-3 px-4 font-medium text-muted-foreground">Farmer</th>
+                        <th className="text-left py-3 px-4 font-medium text-muted-foreground">Level</th>
+                        <th className="text-right py-3 px-4 font-medium text-muted-foreground">Points</th>
+                        <th className="text-right py-3 px-4 font-medium text-muted-foreground">Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {leaderboardData.slice(0, 10).map((user) => (
+                        <tr key={user.id} className="border-b border-border last:border-0 hover:bg-accent/5">
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              {user.rank === 1 && <Trophy className="h-5 w-5 text-amber-500 mr-1" />}
+                              {user.rank === 2 && <Medal className="h-5 w-5 text-gray-400 mr-1" />}
+                              {user.rank === 3 && <Medal className="h-5 w-5 text-amber-600 mr-1" />}
+                              {user.rank > 3 && <span className="w-5 mr-1 text-center">{user.rank}</span>}
+                            </div>
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 rounded-full overflow-hidden mr-3">
+                                <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" />
+                              </div>
+                              <div>
+                                <div className="font-medium">{user.username}</div>
+                                <div className="text-xs text-muted-foreground">{user.walletAddress.substring(0, 6)}...{user.walletAddress.substring(user.walletAddress.length - 4)}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              <Star className="h-4 w-4 text-[#2DB87F] mr-1" />
+                              {user.level}
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 text-right font-semibold">
+                            {user.points.toLocaleString()}
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <RankChangeIndicator change={user.change} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Current User's Position (if not in top 10) */}
+                {getUserRank() > 10 && (
+                  <>
+                    <div className="text-center py-2 text-muted-foreground">• • •</div>
+                    <table className="w-full">
+                      <tbody>
+                        <tr className="bg-[#2DB87F]/10 border-[#2DB87F]/30 rounded-md">
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              <span className="w-5 mr-1 text-center">{getUserRank()}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 rounded-full overflow-hidden mr-3 border border-[#2DB87F]">
+                                <img 
+                                  src="https://api.dicebear.com/7.x/bottts/svg?seed=YourUsername" 
+                                  alt={currentUser.username} 
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <div className="font-medium">{currentUser.username}</div>
+                                <div className="text-xs text-muted-foreground">0xYourWallet</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              <Star className="h-4 w-4 text-[#2DB87F] mr-1" />
+                              {currentUser.level}
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 text-right font-semibold">
+                            {currentUser.totalPoints.toLocaleString()}
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <div className="flex items-center text-green-500 justify-end"><ArrowUp className="h-4 w-4 mr-1" />5</div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Reward Tiers */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Award className="mr-2 h-5 w-5 text-[#2DB87F]" />
+                  Reward Tiers
+                </CardTitle>
+                <CardDescription>
+                  Rewards for top performers in this week's leaderboard
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="border border-amber-500/30 bg-amber-500/5 rounded-lg p-4 text-center">
+                    <Trophy className="h-10 w-10 text-amber-500 mx-auto mb-2" />
+                    <h3 className="text-lg font-semibold mb-1">1st Place</h3>
+                    <p className="text-muted-foreground text-sm mb-2">Top farmer of the week</p>
+                    <div className="space-y-1">
+                      <div className="text-sm">5,000 Testnet Points</div>
+                      <div className="text-sm">Legendary Equipment NFT</div>
+                      <div className="text-sm">5x Farm Plot Expansion</div>
+                    </div>
+                  </div>
+                  <div className="border border-gray-400/30 bg-gray-400/5 rounded-lg p-4 text-center">
+                    <Medal className="h-10 w-10 text-gray-400 mx-auto mb-2" />
+                    <h3 className="text-lg font-semibold mb-1">2nd Place</h3>
+                    <p className="text-muted-foreground text-sm mb-2">Runner-up farmer</p>
+                    <div className="space-y-1">
+                      <div className="text-sm">3,000 Testnet Points</div>
+                      <div className="text-sm">Rare Equipment NFT</div>
+                      <div className="text-sm">3x Farm Plot Expansion</div>
+                    </div>
+                  </div>
+                  <div className="border border-amber-600/30 bg-amber-600/5 rounded-lg p-4 text-center">
+                    <Medal className="h-10 w-10 text-amber-600 mx-auto mb-2" />
+                    <h3 className="text-lg font-semibold mb-1">3rd Place</h3>
+                    <p className="text-muted-foreground text-sm mb-2">Bronze tier farmer</p>
+                    <div className="space-y-1">
+                      <div className="text-sm">1,500 Testnet Points</div>
+                      <div className="text-sm">Uncommon Equipment NFT</div>
+                      <div className="text-sm">2x Farm Plot Expansion</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-muted-foreground mb-3">Top 4-10 positions also receive rewards!</p>
+                  <Button variant="outline">View Full Reward Structure</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Use the same content for all tabs in this mock */}
+          <TabsContent value="monthly" className="space-y-6">
+            {/* Same content as weekly tab */}
+            <div className="text-center p-8 text-muted-foreground">
+              Monthly leaderboard would show the same structure with different data
+            </div>
+          </TabsContent>
+
+          <TabsContent value="allTime" className="space-y-6">
+            {/* Same content as weekly tab */}
+            <div className="text-center p-8 text-muted-foreground">
+              All-time leaderboard would show the same structure with different data
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {/* Additional Stats */}
+        <section className="mt-8">
+          <h2 className="text-2xl font-bold mb-4 font-heading flex items-center">
+            <Users className="mr-2 h-5 w-5" />
+            Community Stats
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">15,427</div>
+                  <p className="text-sm text-muted-foreground">Total Farmers</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">2.3M</div>
+                  <p className="text-sm text-muted-foreground">Crops Harvested</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">457K</div>
+                  <p className="text-sm text-muted-foreground">Tasks Completed</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">98.2M</div>
+                  <p className="text-sm text-muted-foreground">Points Earned</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      </div>
+    </Layout>
   );
 };
 

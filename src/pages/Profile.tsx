@@ -2,14 +2,14 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Header from '@/components/layout/Header';
+import { Layout } from '@/components/layout/Layout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { User, Settings, Award, Medal, Shield, Zap, CircleDollarSign, Save, RotateCcw } from 'lucide-react';
+import { Settings, Award, Medal, Shield, Zap, CircleDollarSign, Save, RotateCcw, Wallet, Lock } from 'lucide-react';
 import { toast } from "@/components/ui/use-toast";
 import ProgressBar from '@/components/ui/ProgressBar';
 import { currentUser } from '@/utils/taskData';
+import WalletConnect from '@/components/wallet/WalletConnect';
 
 const upgradeOptions = [
   {
@@ -88,15 +88,38 @@ const achievements = [
 const Profile = () => {
   const [user, setUser] = useState({
     username: currentUser.username,
-    email: "user@example.com",
+    walletAddress: "0x8f3...a29e",
     level: currentUser.level,
     points: currentUser.totalPoints,
-    avatarUrl: "/placeholder.svg",
+    avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=YourUsername",
   });
   
   const [editMode, setEditMode] = useState(false);
   const [userUpgrades, setUserUpgrades] = useState(upgradeOptions);
   const [formValues, setFormValues] = useState(user);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  
+  useEffect(() => {
+    // Check if wallet is connected
+    const connected = localStorage.getItem('walletConnected') === 'true';
+    const address = localStorage.getItem('walletAddress');
+    
+    if (connected && address) {
+      setIsWalletConnected(true);
+      setUser(prev => ({
+        ...prev,
+        walletAddress: address.substring(0, 6) + '...' + address.substring(address.length - 4)
+      }));
+    }
+  }, []);
+  
+  const handleWalletConnect = (address: string) => {
+    setIsWalletConnected(true);
+    setUser(prev => ({
+      ...prev,
+      walletAddress: address.substring(0, 6) + '...' + address.substring(address.length - 4)
+    }));
+  };
   
   const handleSaveProfile = () => {
     setUser(formValues);
@@ -105,11 +128,6 @@ const Profile = () => {
       title: "Profile Updated",
       description: "Your profile has been successfully updated.",
     });
-  };
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormValues(prev => ({ ...prev, [name]: value }));
   };
   
   const handlePurchaseUpgrade = (upgradeId: string) => {
@@ -185,10 +203,27 @@ const Profile = () => {
     });
   };
   
+  if (!isWalletConnected) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 pt-24 pb-16">
+          <div className="h-[70vh] flex flex-col items-center justify-center text-center max-w-lg mx-auto">
+            <div className="mb-6 p-5 rounded-full bg-[#2DB87F]/10">
+              <Lock className="h-12 w-12 text-[#2DB87F]" />
+            </div>
+            <h1 className="text-3xl font-bold mb-4 font-heading">Connect Your Wallet</h1>
+            <p className="text-muted-foreground mb-8">
+              You need to connect your wallet to access your Snarbles profile. Connect now to view your achievements, upgrade your farm, and track your progress.
+            </p>
+            <WalletConnect onConnect={handleWalletConnect} />
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+  
   return (
-    <div className="min-h-screen farm-background">
-      <Header />
-      
+    <Layout>
       <main className="container mx-auto px-4 pt-24 pb-16">
         <h1 className="text-3xl font-bold mb-6 font-heading">Profile</h1>
         
@@ -216,54 +251,23 @@ const Profile = () => {
                   </AvatarFallback>
                 </Avatar>
                 
-                {editMode ? (
-                  <div className="w-full space-y-4">
-                    <div>
-                      <label htmlFor="username" className="text-sm font-medium text-muted-foreground block mb-1">
-                        Username
-                      </label>
-                      <Input
-                        id="username"
-                        name="username"
-                        value={formValues.username}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    
-                    <div>
-                      <label htmlFor="email" className="text-sm font-medium text-muted-foreground block mb-1">
-                        Email
-                      </label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formValues.email}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    
-                    <Button onClick={handleSaveProfile} className="w-full">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save Changes
-                    </Button>
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold">{user.username}</h3>
+                  <div className="flex items-center justify-center mt-2 mb-4 text-sm bg-secondary/50 py-1 px-3 rounded-full">
+                    <Wallet className="h-3.5 w-3.5 mr-1.5 text-primary" />
+                    {user.walletAddress}
                   </div>
-                ) : (
-                  <div className="text-center">
-                    <h3 className="text-xl font-semibold">{user.username}</h3>
-                    <p className="text-muted-foreground mb-4">{user.email}</p>
-                    
-                    <div className="flex justify-center items-center space-x-2 mb-2">
-                      <User className="h-4 w-4 text-primary" />
-                      <span className="font-medium">Level {user.level}</span>
-                    </div>
-                    
-                    <div className="flex justify-center items-center space-x-2">
-                      <Award className="h-4 w-4 text-amber-500" />
-                      <span className="font-medium">{user.points.toLocaleString()} points</span>
-                    </div>
+                  
+                  <div className="flex justify-center items-center space-x-2 mb-2">
+                    <Medal className="h-4 w-4 text-primary" />
+                    <span className="font-medium">Level {user.level}</span>
                   </div>
-                )}
+                  
+                  <div className="flex justify-center items-center space-x-2">
+                    <Award className="h-4 w-4 text-amber-500" />
+                    <span className="font-medium">{user.points.toLocaleString()} points</span>
+                  </div>
+                </div>
               </div>
               
               <div className="space-y-2">
@@ -401,7 +405,7 @@ const Profile = () => {
           </div>
         </div>
       </main>
-    </div>
+    </Layout>
   );
 };
 
