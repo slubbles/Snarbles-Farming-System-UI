@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { NotificationProvider } from "@/components/ui/notifications";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import Index from "./pages/Index";
 import Tasks from "./pages/Tasks";
 import Dashboard from "./pages/Dashboard";
@@ -28,6 +29,7 @@ const App = () => (
       <NotificationProvider>
         <Toaster />
         <Sonner />
+        <ThemeToggle />
         <BrowserRouter>
           <Routes>
             {isAppSubdomain ? (
