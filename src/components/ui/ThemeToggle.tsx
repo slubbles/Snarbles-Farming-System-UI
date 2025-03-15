@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNotificationContext } from '@/components/ui/notifications';
-import { Switch } from '@/components/ui/Switch';
+import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
 const ThemeToggle = () => {
