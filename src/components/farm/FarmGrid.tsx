@@ -258,7 +258,8 @@ const FarmGrid = ({ grid, onCellUpdate, resources }: FarmGridProps) => {
         </Button>
       </div>
       
-      <style jsx global>{`
+      <style>
+        {`
         .harvest-points-animation {
           position: absolute;
           color: #3EC7AA;
@@ -314,7 +315,8 @@ const FarmGrid = ({ grid, onCellUpdate, resources }: FarmGridProps) => {
             opacity: 0;
           }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };

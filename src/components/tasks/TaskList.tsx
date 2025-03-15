@@ -54,16 +54,16 @@ const TaskList = ({ tasks, onTaskUpdate }: TaskListProps) => {
 
   return (
     <div>
-      <div className="bg-white/80 backdrop-blur-md sticky top-16 z-10 pt-4 pb-2 border-b border-snarbles-gray-200">
+      <div className="bg-background/80 backdrop-blur-md sticky top-16 z-10 pt-4 pb-2 border-b border-border">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-snarbles-gray-500" />
+              <Search className="h-4 w-4 text-muted-foreground" />
             </div>
             <input
               type="text"
               placeholder="Search tasks..."
-              className="w-full pl-10 pr-4 py-2 border border-snarbles-gray-300 rounded-lg focus:ring-1 focus:ring-snarbles-red focus:border-snarbles-red"
+              className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:ring-1 focus:ring-primary focus:border-primary bg-card"
               value={searchTerm}
               onChange={handleSearch}
             />
@@ -71,9 +71,9 @@ const TaskList = ({ tasks, onTaskUpdate }: TaskListProps) => {
           
           <div className="flex flex-wrap gap-2 items-center">
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-snarbles-gray-500" />
+              <Filter className="h-4 w-4 text-muted-foreground" />
               <select 
-                className="rounded-lg border border-snarbles-gray-300 py-2 px-3 focus:ring-1 focus:ring-snarbles-red focus:border-snarbles-red text-sm"
+                className="rounded-lg border border-input py-2 px-3 focus:ring-1 focus:ring-primary focus:border-primary bg-card text-sm"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as 'all' | 'completed' | 'inProgress')}
               >
@@ -84,7 +84,7 @@ const TaskList = ({ tasks, onTaskUpdate }: TaskListProps) => {
             </div>
             
             <select 
-              className="rounded-lg border border-snarbles-gray-300 py-2 px-3 focus:ring-1 focus:ring-snarbles-red focus:border-snarbles-red text-sm"
+              className="rounded-lg border border-input py-2 px-3 focus:ring-1 focus:ring-primary focus:border-primary bg-card text-sm"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
             >
@@ -96,7 +96,7 @@ const TaskList = ({ tasks, onTaskUpdate }: TaskListProps) => {
             </select>
             
             <select 
-              className="rounded-lg border border-snarbles-gray-300 py-2 px-3 focus:ring-1 focus:ring-snarbles-red focus:border-snarbles-red text-sm"
+              className="rounded-lg border border-input py-2 px-3 focus:ring-1 focus:ring-primary focus:border-primary bg-card text-sm"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'newest' | 'points' | 'progress')}
             >
@@ -115,9 +115,9 @@ const TaskList = ({ tasks, onTaskUpdate }: TaskListProps) => {
           ))
         ) : (
           <div className="text-center py-8">
-            <Award className="h-12 w-12 mx-auto text-snarbles-gray-300 mb-2" />
-            <h3 className="text-lg font-medium text-snarbles-gray-700">No matching tasks found</h3>
-            <p className="text-snarbles-gray-500 mt-1">Try adjusting your search or filters</p>
+            <Award className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+            <h3 className="text-lg font-medium">No matching tasks found</h3>
+            <p className="text-muted-foreground mt-1">Try adjusting your search or filters</p>
           </div>
         )}
       </div>

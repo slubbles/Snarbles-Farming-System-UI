@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { useLocation } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import WalletConnect from '@/components/wallet/WalletConnect';
 import { useNotificationContext } from '@/components/ui/notifications';
 
@@ -14,8 +12,6 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
-  const isHomepage = location.pathname === '/' || location.pathname === '/home';
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const { addNotification } = useNotificationContext();
   const [isWalletConnected, setIsWalletConnected] = useState(false);
 
@@ -31,33 +27,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     const interval = setInterval(checkWalletConnection, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  // Initialize theme from localStorage
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme === 'light' || storedTheme === 'dark') {
-      setTheme(storedTheme);
-      document.documentElement.classList.toggle('dark', storedTheme === 'dark');
-    } else {
-      // Default to dark theme
-      localStorage.setItem('theme', 'dark');
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  // Handle theme toggle
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    
-    addNotification({
-      title: `${newTheme === 'dark' ? 'Dark' : 'Light'} Mode Activated`,
-      message: `You've switched to ${newTheme} mode.`,
-      type: 'info'
-    });
-  };
 
   // Protected routes that require wallet connection
   const protectedRoutes = ['/dashboard', '/farm', '/tasks', '/profile', '/leaderboard', '/admin'];
@@ -90,16 +59,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </p>
           <WalletConnect />
         </div>
-        <div className="fixed bottom-4 left-4">
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full h-10 w-10"
-            onClick={toggleTheme}
-          >
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
-        </div>
+        <ThemeToggle />
       </div>
     );
   }
@@ -108,16 +68,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen farm-background">
       <Header />
       {children}
-      <div className="fixed bottom-4 left-4">
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full h-10 w-10"
-          onClick={toggleTheme}
-        >
-          {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </Button>
-      </div>
+      <ThemeToggle />
     </div>
   );
 };

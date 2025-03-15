@@ -1,8 +1,9 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Wallet, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import { useNotificationContext } from '@/components/ui/notifications';
 
 interface WalletConnectProps {
   onConnect?: (address: string) => void;
@@ -12,6 +13,7 @@ interface WalletConnectProps {
 const WalletConnect = ({ onConnect, onDisconnect }: WalletConnectProps) => {
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
+  const { addNotification } = useNotificationContext();
 
   const connectWallet = () => {
     // Mock wallet connect - in a real app, this would use the WalletConnect or similar API
@@ -29,6 +31,12 @@ const WalletConnect = ({ onConnect, onDisconnect }: WalletConnectProps) => {
       title: "Wallet Connected",
       description: "Your wallet has been successfully connected.",
     });
+    
+    addNotification({
+      title: "Wallet Connected",
+      message: "You've successfully connected your wallet to Snarbles.",
+      type: "success"
+    });
   };
 
   const disconnectWallet = () => {
@@ -45,10 +53,16 @@ const WalletConnect = ({ onConnect, onDisconnect }: WalletConnectProps) => {
       title: "Wallet Disconnected",
       description: "Your wallet has been disconnected.",
     });
+    
+    addNotification({
+      title: "Wallet Disconnected",
+      message: "Your wallet has been disconnected from Snarbles.",
+      type: "info"
+    });
   };
 
   // Check for existing connection on component mount
-  useState(() => {
+  useEffect(() => {
     const connected = localStorage.getItem('walletConnected') === 'true';
     const address = localStorage.getItem('walletAddress');
     
@@ -57,7 +71,7 @@ const WalletConnect = ({ onConnect, onDisconnect }: WalletConnectProps) => {
       setWalletAddress(address);
       if (onConnect) onConnect(address);
     }
-  });
+  }, [onConnect]);
 
   return (
     <div>

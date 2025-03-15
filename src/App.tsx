@@ -17,6 +17,11 @@ import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
+// Determine if we're in the app subdomain (app.snarbles.xyz) or main domain (snarbles.xyz)
+const isAppSubdomain = window.location.hostname.startsWith('app.') || 
+                        window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1';
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -25,17 +30,27 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/home" element={<Homepage />} />
-            <Route path="/index" element={<Index />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/farm" element={<Farm />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/admin" element={<Admin />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
+            {isAppSubdomain ? (
+              // App subdomain routes (app.snarbles.xyz)
+              <>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/tasks" element={<Tasks />} />
+                <Route path="/farm" element={<Farm />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="*" element={<NotFound />} />
+              </>
+            ) : (
+              // Main domain routes (snarbles.xyz)
+              <>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/home" element={<Homepage />} />
+                <Route path="/index" element={<Index />} />
+                <Route path="*" element={<Navigate to="/app" replace />} />
+              </>
+            )}
           </Routes>
         </BrowserRouter>
       </NotificationProvider>

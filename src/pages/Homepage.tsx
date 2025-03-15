@@ -1,272 +1,260 @@
 
 import { useNavigate } from 'react-router-dom';
-import { Tractor, BarChart3, Trophy, ArrowRight, Sparkles, Leaf, Calendar, Wallet, Zap, Users } from 'lucide-react';
+import { Tractor, Leaf, Seeds, Droplet, Sparkles, Trophy, ArrowRight, Users, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Layout } from '@/components/layout/Layout';
-import { currentUser } from '@/utils/taskData';
-import ProgressBar from '@/components/ui/ProgressBar';
-import WalletConnect from '@/components/wallet/WalletConnect';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Homepage = () => {
   const navigate = useNavigate();
   
-  const features = [
-    {
-      icon: <Tractor className="h-10 w-10 text-[#3EC7AA]" />,
-      title: "Strategic Farm Management",
-      description: "Plant, water, and harvest your digital crops. Every decision matters in your journey to becoming a master farmer.",
-      action: () => navigate('/farm')
-    },
-    {
-      icon: <Zap className="h-10 w-10 text-[#3EC7AA]" />,
-      title: "Earn Real Rewards",
-      description: "Complete tasks to earn seeds and Testnet Points. No free handouts—every reward is earned through your dedication and strategy.",
-      action: () => navigate('/tasks')
-    },
-    {
-      icon: <Trophy className="h-10 w-10 text-[#3EC7AA]" />,
-      title: "Competitive Leaderboards",
-      description: "Climb the ranks and showcase your farming prowess. Compete against other farmers and earn recognition for your skills.",
-      action: () => navigate('/leaderboard')
-    },
-    {
-      icon: <Users className="h-10 w-10 text-[#3EC7AA]" />,
-      title: "Join Farming Guilds",
-      description: "Connect with other farmers, form guilds, and amplify your rewards through collaboration and friendly competition.",
-      action: () => navigate('/dashboard')
-    }
-  ];
-
+  const openApp = () => {
+    // In a real app, we would redirect to app.snarbles.xyz
+    // For now, redirect to /dashboard
+    window.location.href = window.location.hostname.includes('localhost') 
+      ? '/dashboard' 
+      : 'https://app.snarbles.xyz';
+  };
+  
   return (
-    <Layout>
-      <main className="container mx-auto px-4 pt-24 pb-16">
-        {/* Hero Section */}
-        <section className="py-12 md:py-20 max-w-4xl mx-auto text-center animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 font-heading tracking-tight">
-            In a World of Free Money, <span className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] bg-clip-text text-transparent">We Choose to Grind</span>
-          </h1>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Snarbles emerged from the chaos of airdrop season—a battleground where true farmers can separate themselves from those seeking handouts. Here, every seed, every harvest, and every point is earned through strategy and effort.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button 
-              className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] hover:opacity-90 text-primary-foreground text-lg px-6 py-6 rounded-xl shadow-lg"
-              onClick={() => navigate('/farm')}
-            >
-              Start Your Farm <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <WalletConnect />
+    <div className="min-h-screen bg-background text-foreground farm-background overflow-x-hidden">
+      <header className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] flex items-center justify-center">
+              <Leaf className="h-5 w-5 text-white" />
+            </div>
+            <span className="text-2xl font-bold font-heading">Snarbles</span>
           </div>
+          
+          <Button 
+            onClick={openApp}
+            className="wallet-connect-btn"
+          >
+            Launch App
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </header>
+
+      <main>
+        {/* Hero Section */}
+        <section className="py-20 md:py-32 relative overflow-hidden">
+          <div className="container mx-auto px-4 text-center max-w-5xl">
+            <h1 className="text-4xl md:text-7xl font-extrabold mb-6 leading-tight">
+              A Web3 Farming Game <span className="green-gradient-text">Where Everything is Earned</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">
+              In a blockchain world of airdrop hunters and reward farmers, Snarbles is built on a simple principle: real work, real rewards. No shortcuts.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button 
+                onClick={openApp}
+                className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] hover:opacity-90 text-primary-foreground text-lg px-8 py-6 rounded-xl shadow-lg"
+              >
+                Start Farming <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <Button 
+                variant="outline"
+                className="border-[#3EC7AA] text-[#3EC7AA] hover:bg-[#3EC7AA]/10 text-lg px-8 py-6 rounded-xl"
+                onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Learn More
+              </Button>
+            </div>
+          </div>
+          
+          {/* Background decorative elements */}
+          <div className="absolute -bottom-10 -right-10 h-64 w-64 rounded-full bg-[#3EC7AA]/10 blur-3xl"></div>
+          <div className="absolute -top-10 -left-10 h-64 w-64 rounded-full bg-[#3EC7AA]/10 blur-3xl"></div>
         </section>
 
-        {/* Origin Story */}
-        <section className="mb-16 max-w-4xl mx-auto animate-fade-in">
-          <div className="glass-panel p-8 md:p-12 rounded-xl">
-            <h2 className="text-3xl font-bold mb-6 font-heading text-center">The Snarbles Origin</h2>
-            <div className="prose prose-lg dark:prose-invert mx-auto">
-              <p className="leading-relaxed mb-4">
-                In the early days of 2023, as airdrops rained down on those who simply held tokens without contribution, a small team of builders grew frustrated with the shallow incentives of the Web3 space.
+        {/* How It Works Section */}
+        <section className="py-20 bg-card/30 backdrop-blur-sm" id="about">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">How Snarbles Works</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Unlike other platforms, Snarbles is built around effort and strategy. Every seed planted, every crop harvested represents real work in the ecosystem.
               </p>
-              <p className="leading-relaxed mb-4">
-                "What if," they wondered, "we built a world where every reward had to be earned—where effort and strategy determined success, not just being in the right place at the right time?"
-              </p>
-              <p className="leading-relaxed mb-4">
-                From this question, Snarbles was born—a digital farming ecosystem where seeds must be planted, nurtured, and harvested. Where points are earned through daily tasks, strategic decisions, and community engagement. Where building meaningful connections with other farmers strengthens your yield.
-              </p>
-              <p className="leading-relaxed font-semibold">
-                In Snarbles, there are no shortcuts. Only the satisfaction of watching your farm grow through your own dedication.
-              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-[#3EC7AA]/10 blur-2xl group-hover:bg-[#3EC7AA]/20 transition-all duration-500"></div>
+                <CardContent className="p-8 relative z-10">
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-6">
+                    <Seeds className="h-6 w-6 text-[#3EC7AA]" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">1. Obtain Seeds</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Complete tasks that contribute real value to the ecosystem and earn seeds as a reward for your effort.
+                  </p>
+                  <div className="flex items-center text-[#3EC7AA] text-sm font-medium">
+                    <span>View Tasks</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-[#3EC7AA]/10 blur-2xl group-hover:bg-[#3EC7AA]/20 transition-all duration-500"></div>
+                <CardContent className="p-8 relative z-10">
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-6">
+                    <Droplet className="h-6 w-6 text-[#3EC7AA]" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">2. Plant & Water</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Plant your seeds in your farm plots and water them. Each crop then enters a 1-3 day growing phase.
+                  </p>
+                  <div className="flex items-center text-[#3EC7AA] text-sm font-medium">
+                    <span>Manage Farm</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-[#3EC7AA]/10 blur-2xl group-hover:bg-[#3EC7AA]/20 transition-all duration-500"></div>
+                <CardContent className="p-8 relative z-10">
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-6">
+                    <Sparkles className="h-6 w-6 text-[#3EC7AA]" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">3. Harvest Rewards</h3>
+                  <p className="text-muted-foreground mb-4">
+                    When crops are ready, trigger an on-chain harvest to collect Testnet Points that represent your work.
+                  </p>
+                  <div className="flex items-center text-[#3EC7AA] text-sm font-medium">
+                    <span>View Rewards</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
-
-        {/* How It Works */}
-        <section className="mb-16 animate-fade-in">
-          <h2 className="text-3xl font-bold mb-8 font-heading text-center">How Snarbles Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 interactive-element">
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center text-center">
-                  <div className="rounded-full bg-[#3EC7AA]/10 p-4 mb-4">
-                    <Calendar className="h-8 w-8 text-[#3EC7AA]" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">1. Complete Tasks</h3>
-                  <p className="text-muted-foreground">
-                    Earn seeds by completing Zealy-style tasks. Each task completed gives you resources to grow your farm.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 interactive-element">
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center text-center">
-                  <div className="rounded-full bg-[#3EC7AA]/10 p-4 mb-4">
-                    <Leaf className="h-8 w-8 text-[#3EC7AA]" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">2. Farm Strategically</h3>
-                  <p className="text-muted-foreground">
-                    Plant your seeds, water them daily, and watch them grow over 1-3 days. Your strategy determines your success.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 interactive-element">
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center text-center">
-                  <div className="rounded-full bg-[#3EC7AA]/10 p-4 mb-4">
-                    <Sparkles className="h-8 w-8 text-[#3EC7AA]" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">3. Harvest Rewards</h3>
-                  <p className="text-muted-foreground">
-                    Trigger on-chain harvests to collect Testnet Points and other rewards. Every harvest represents real achievement.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+        
+        {/* Origin Story */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="glass-panel p-12 max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">The Snarbles Origin</h2>
+              <div className="text-lg space-y-6">
+                <p>
+                  In the early days of crypto, as airdrops rained down on those who merely held tokens, a team of builders grew disenchanted with the shallow incentives permeating Web3.
+                </p>
+                <p>
+                  "What if we created a system where rewards directly reflected effort? Where strategy and persistence mattered more than being in the right place at the right time?"
+                </p>
+                <p>
+                  From this question, Snarbles was born—an ecosystem where every reward is earned through dedication, strategy, and real contribution. No free handouts, no shortcuts, just the satisfaction of watching your farm flourish through your own efforts.
+                </p>
+                <p className="font-semibold">
+                  In a world of free money, we choose to grind.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
         
         {/* Features Section */}
-        <section className="py-8 mb-16 animate-fade-in">
-          <h2 className="text-3xl font-bold mb-8 font-heading text-center">Why Snarbles?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {features.map((feature, index) => (
-              <Card 
-                key={index} 
-                className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 hover:border-[#3EC7AA]/50 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-                onClick={feature.action}
-              >
+        <section className="py-20 bg-card/30 backdrop-blur-sm">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">Key Features</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Snarbles combines the best elements of farming games with blockchain technology to create a unique, effort-based experience.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 hover:border-[#3EC7AA]/50 transition-all duration-300">
                 <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                    <div className="p-4 rounded-xl bg-[#3EC7AA]/10">
-                      {feature.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold mb-2 text-center md:text-left">
-                        {feature.title}
-                      </h3>
-                      <p className="text-muted-foreground mb-4 text-center md:text-left">
-                        {feature.description}
-                      </p>
-                      <Button 
-                        variant="ghost" 
-                        className="text-[#3EC7AA] hover:text-[#3EC7AA] hover:bg-[#3EC7AA]/10"
-                        onClick={feature.action}
-                      >
-                        Explore <ArrowRight className="ml-1 h-4 w-4" />
-                      </Button>
-                    </div>
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-4">
+                    <Tractor className="h-6 w-6 text-[#3EC7AA]" />
                   </div>
+                  <h3 className="text-lg font-bold mb-2">Strategic Farming</h3>
+                  <p className="text-muted-foreground">
+                    Manage your resources, plan your plots, and optimize your harvests for maximum yield.
+                  </p>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </section>
-        
-        {/* Testimonials/Proof Section */}
-        <section className="py-8 mb-16 animate-fade-in">
-          <div className="glass-panel p-8 rounded-xl">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
-              <div className="md:w-1/2">
-                <h2 className="text-3xl font-bold mb-4 font-heading">The Grinding Economy</h2>
-                <p className="text-muted-foreground mb-6">
-                  Unlike other platforms that scatter tokens like confetti, Snarbles operates on a simple principle: <strong>effort equals reward</strong>. Our economy is designed to reward those who strategize, persist, and contribute real value to the ecosystem.
-                </p>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Average Rewards Per Harvest</span>
-                      <span>250 Points</span>
-                    </div>
-                    <ProgressBar 
-                      value={250} 
-                      max={500}
-                      className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36]" 
-                    />
+              
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 hover:border-[#3EC7AA]/50 transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-4">
+                    <Clock className="h-6 w-6 text-[#3EC7AA]" />
                   </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span>Daily Active Farmers</span>
-                      <span>5,283</span>
-                    </div>
-                    <ProgressBar 
-                      value={5283} 
-                      max={10000} 
-                      variant="success"
-                      className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36]"
-                    />
+                  <h3 className="text-lg font-bold mb-2">Growing Cycle</h3>
+                  <p className="text-muted-foreground">
+                    Watch your plants grow over 1-3 days, creating a realistic farming experience that rewards patience.
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 hover:border-[#3EC7AA]/50 transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-4">
+                    <Trophy className="h-6 w-6 text-[#3EC7AA]" />
                   </div>
-                </div>
-                <Button 
-                  className="mt-6 bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] hover:opacity-90"
-                  onClick={() => navigate('/dashboard')}
-                >
-                  Join the Economy
-                </Button>
-              </div>
-              <div className="md:w-1/2 flex justify-center">
-                <div className="relative">
-                  <div className="absolute -top-6 -right-6 rounded-full bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] p-4 animate-pulse">
-                    <Sparkles className="h-6 w-6 text-primary-foreground" />
+                  <h3 className="text-lg font-bold mb-2">Leaderboards</h3>
+                  <p className="text-muted-foreground">
+                    Compete with other farmers and rise through the ranks as you demonstrate your farming prowess.
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm border-[#3EC7AA]/20 hover:border-[#3EC7AA]/50 transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-4">
+                    <Users className="h-6 w-6 text-[#3EC7AA]" />
                   </div>
-                  <div className="bg-card p-6 rounded-xl border border-[#3EC7AA]/20 shadow-xl">
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 border-b border-border">
-                        <div className="flex items-center gap-3">
-                          <Tractor className="h-5 w-5 text-[#3EC7AA]" />
-                          <span className="font-medium">Rare Crop Harvested</span>
-                        </div>
-                        <span className="text-[#3EC7AA]">+500 pts</span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 border-b border-border">
-                        <div className="flex items-center gap-3">
-                          <Calendar className="h-5 w-5 text-[#3EC7AA]" />
-                          <span className="font-medium">7-Day Farming Streak</span>
-                        </div>
-                        <span className="text-[#3EC7AA]">+350 pts</span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 border-b border-border">
-                        <div className="flex items-center gap-3">
-                          <Trophy className="h-5 w-5 text-amber-500" />
-                          <span className="font-medium">Weekly Leaderboard #1</span>
-                        </div>
-                        <span className="text-[#3EC7AA]">+1000 pts</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <h3 className="text-lg font-bold mb-2">Guilds & Referrals</h3>
+                  <p className="text-muted-foreground">
+                    Form alliances with other farmers, invite friends, and amplify your collective rewards.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
         
-        {/* CTA Section */}
-        <section className="py-8 text-center animate-fade-in">
-          <h2 className="text-3xl font-bold mb-4 font-heading">Will You Answer the Call?</h2>
-          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            In a digital landscape filled with empty promises and inflated tokens, Snarbles stands as a testament to the value of real work and strategic thinking. Connect your wallet, start completing tasks, and build your farming empire—one hard-earned seed at a time.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
+        {/* Call to Action */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">Ready to Start Your Farm?</h2>
+            <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
+              Join thousands of players who have chosen the path of real effort over free handouts. Your farming journey begins now.
+            </p>
             <Button 
+              onClick={openApp}
               className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] hover:opacity-90 text-primary-foreground text-lg px-8 py-6 rounded-xl shadow-lg"
-              onClick={() => navigate('/farm')}
             >
-              Start Farming <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button 
-              variant="outline"
-              className="border-[#3EC7AA]/50 hover:border-[#3EC7AA] text-lg px-8 py-6 rounded-xl"
-              onClick={() => navigate('/tasks')}
-            >
-              View Tasks <Calendar className="ml-2 h-5 w-5" />
+              Launch App <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </section>
       </main>
-    </Layout>
+
+      <footer className="py-12 border-t border-border">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] flex items-center justify-center">
+                <Leaf className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-xl font-bold">Snarbles</span>
+            </div>
+            
+            <div className="text-sm text-muted-foreground">
+              &copy; {new Date().getFullYear()} Snarbles. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+      
+      <ThemeToggle />
+    </div>
   );
 };
 
