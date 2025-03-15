@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import { Tractor, Leaf, Seedling, Droplet, Sparkles, Trophy, ArrowRight, Users, Clock, ChevronRight } from 'lucide-react';
+import { Tractor, Leaf, Sprout, Droplet, Sparkles, Trophy, ArrowRight, Users, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ThemeToggle from '@/components/ui/ThemeToggle';
@@ -84,7 +84,7 @@ const Homepage = () => {
                 <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-[#3EC7AA]/10 blur-2xl group-hover:bg-[#3EC7AA]/20 transition-all duration-500"></div>
                 <CardContent className="p-8 relative z-10">
                   <div className="h-12 w-12 rounded-full bg-[#3EC7AA]/10 flex items-center justify-center mb-6">
-                    <Seedling className="h-6 w-6 text-[#3EC7AA]" />
+                    <Sprout className="h-6 w-6 text-[#3EC7AA]" />
                   </div>
                   <h3 className="text-xl font-bold mb-3">1. Obtain Seeds</h3>
                   <p className="text-muted-foreground mb-4">
