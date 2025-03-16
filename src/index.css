@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,7 +21,7 @@
     --secondary-foreground: 240 10% 95%;
 
     --muted: 240 10% 25%;
-    --muted-foreground: 240 10% 65%;
+    --muted-foreground: 240 10% 70%;
 
     --accent: 255 92% 76%;
     --accent-foreground: 240 10% 98%;
@@ -62,7 +63,7 @@
     --primary-foreground: 240 10% 100%;
     
     --secondary: 240 10% 92%;
-    --secondary-foreground: 240 10% 10%;
+    --secondary-foreground: 240 10% 20%;
     
     --muted: 240 10% 92%;
     --muted-foreground: 240 10% 40%;
@@ -101,8 +102,22 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Readex Pro', sans-serif;
+    @apply font-medium tracking-tight;
   }
 
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+
+  /* Glass effects */
   .glass-panel {
     @apply bg-card/50 backdrop-blur-md border border-white/10 rounded-xl shadow-lg;
   }
@@ -111,14 +126,26 @@
     @apply bg-card/70 backdrop-blur-xs border border-white/10 rounded-lg;
   }
 
+  /* Card styles */
+  .card-highlight {
+    @apply border-primary/20 hover:border-primary/40 transition-colors duration-300;
+  }
+
+  .card-interactive {
+    @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:bg-card/90;
+  }
+
+  /* Task cards */
   .task-card-hover {
     @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1 hover:bg-card/90;
   }
 
+  /* Points and badges */
   .point-badge {
     @apply bg-primary text-primary-foreground text-xs font-medium px-2.5 py-0.5 rounded-full;
   }
 
+  /* Progress bars */
   .progress-bar-container {
     @apply h-2 w-full bg-secondary rounded-full overflow-hidden;
   }
@@ -127,10 +154,12 @@
     @apply h-full bg-primary transition-all duration-500 ease-out;
   }
 
+  /* Text effects */
   .text-shadow-sm {
     text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   }
 
+  /* Resources */
   .resource-item {
     @apply flex items-center justify-between p-3 bg-card rounded-lg border border-border;
   }
@@ -139,6 +168,7 @@
     @apply flex items-center gap-2;
   }
 
+  /* Farm cells */
   .farm-cell {
     @apply w-full aspect-square rounded-md border border-border transition-all duration-200 ease-in-out;
   }
@@ -156,14 +186,14 @@
   }
 
   .farm-cell-ready {
-    @apply bg-gradient-to-br from-violet-500 to-indigo-600 hover:opacity-90 cursor-pointer;
+    @apply bg-gradient-to-br from-violet-500 to-indigo-600 hover:opacity-90 cursor-pointer animate-glow;
   }
 
   .farm-cell-harvested {
     @apply bg-accent/20 hover:bg-accent/30 cursor-pointer;
   }
 
-  /* Animation Classes */
+  /* Animations */
   .animate-crop-grow {
     animation: crop-grow 2s ease-in-out;
   }
@@ -174,6 +204,28 @@
 
   .animate-coins {
     animation: coins-fall 1.5s ease-out forwards;
+  }
+
+  /* Gradients */
+  .gradient-text {
+    @apply bg-gradient-to-r from-snarbles-purple to-snarbles-teal bg-clip-text text-transparent;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-r from-snarbles-purple to-snarbles-indigo;
+  }
+
+  .gradient-border {
+    @apply border border-transparent bg-gradient-to-r from-snarbles-purple to-snarbles-indigo bg-clip-border;
+  }
+
+  .gradient-button {
+    @apply bg-gradient-to-r from-snarbles-purple to-snarbles-indigo text-white hover:from-snarbles-purple/90 hover:to-snarbles-indigo/90 transition-all;
+  }
+
+  /* Shimmer effect */
+  .shimmer {
+    @apply bg-gradient-to-r from-transparent via-white/20 to-transparent bg-[length:200%_100%] animate-shine;
   }
 
   /* WalletConnect Button */
@@ -220,14 +272,9 @@
   @apply shadow-[0_0_15px_rgba(155,135,245,0.5)];
 }
 
-/* Gradient text */
-.gradient-text {
-  @apply bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent;
-}
-
-/* Gradient background */
-.gradient-bg {
-  @apply bg-gradient-to-r from-violet-600 to-indigo-600;
+/* Stats card highlight */
+.stats-card {
+  @apply border-l-4 border-primary/70 pl-2;
 }
 
 /* Keyframe Animations */
@@ -272,4 +319,40 @@
 
 .tooltip-trigger:hover .tooltip {
   @apply visible;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-md hover:shadow-primary/10 hover:-translate-y-0.5;
+}
+
+/* Table styling improvements */
+.table-row-highlight:nth-child(even) {
+  @apply bg-secondary/30;
+}
+
+.table-row-highlight:hover {
+  @apply bg-secondary/50;
+}
+
+/* Admin dashboard specific styles */
+.admin-stat-card {
+  @apply flex flex-col items-center justify-center p-4 rounded-lg border border-border bg-card/50 hover:bg-card/80 transition-all duration-200 hover:-translate-y-1;
+}
+
+.admin-metric {
+  @apply text-2xl font-bold mt-1;
+}
+
+.admin-metric-label {
+  @apply text-xs text-muted-foreground;
+}
+
+/* Improved button styles */
+.action-button {
+  @apply bg-gradient-to-r from-snarbles-purple to-snarbles-indigo hover:opacity-90 text-white font-medium rounded-lg flex items-center justify-center gap-2 transition-all;
+}
+
+.secondary-button {
+  @apply bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium rounded-lg flex items-center justify-center gap-2 transition-all;
 }

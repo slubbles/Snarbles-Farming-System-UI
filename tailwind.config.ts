@@ -34,6 +34,9 @@ export default {
 					dark: '#1A1A1A',
 					light: '#F5F5F5',
 					green: '#34C759',
+					purple: '#9B87F5',
+					teal: '#3EC7AA',
+					indigo: '#6366F1',
 					gray: {
 						100: '#F6F6F7',
 						200: '#EAEAEB',
@@ -125,13 +128,14 @@ export default {
 					'100%': { transform: 'scale(1)', opacity: '1' }
 				},
 				'glow': {
-					'0%, 100%': { 
-						boxShadow: '0 0 10px rgba(52, 199, 89, 0.5)' 
-					},
-					'50%': { 
-						boxShadow: '0 0 20px rgba(52, 199, 89, 0.8)' 
-					}
-				}
+					'0%': { boxShadow: '0 0 10px rgba(155, 135, 245, 0.5)' },
+					'50%': { boxShadow: '0 0 20px rgba(155, 135, 245, 0.8)' },
+					'100%': { boxShadow: '0 0 10px rgba(155, 135, 245, 0.5)' }
+				},
+				'shine': {
+					'0%': { backgroundPosition: '200% 0' },
+					'100%': { backgroundPosition: '-200% 0' }
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -142,7 +146,8 @@ export default {
 				'slide-out': 'slide-out 0.4s ease-out',
 				'pulse-scale': 'pulse-scale 2s infinite',
 				'point-earned': 'point-earned 0.5s ease-out forwards',
-				'glow': 'glow 2s infinite'
+				'glow': 'glow 2s infinite',
+				'shine': 'shine 3s linear infinite',
 			},
 			backdropBlur: {
 				xs: '2px',

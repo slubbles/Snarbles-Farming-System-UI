@@ -37,7 +37,7 @@ const ThemeToggle = () => {
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 backdrop-blur-sm bg-background/80 border border-border p-2 rounded-full shadow-lg">
+    <div className="fixed bottom-6 left-6 z-50 flex items-center gap-2 backdrop-blur-sm bg-background/90 border border-border p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
       <Switch 
         id="theme-toggle"
         checked={theme === 'light'}

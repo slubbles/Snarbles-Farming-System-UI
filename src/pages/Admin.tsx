@@ -25,10 +25,15 @@ import {
   User, 
   Users, 
   Wallet, 
-  Leaf
+  Leaf,
+  TrendingUp,
+  Landmark,
+  Activity,
+  Calendar
 } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { toast } from '@/components/ui/use-toast';
+import ProgressBar from '@/components/ui/ProgressBar';
 
 interface FarmStatistics {
   totalFarmers: number;
@@ -113,6 +118,11 @@ const AdminPage = () => {
     };
     
     checkAdminStatus();
+
+    // Force dark mode on admin page
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light-mode');
   }, []);
   
   // Handle search
@@ -167,7 +177,7 @@ const AdminPage = () => {
               You need administrator privileges to access this page. Please connect with an admin wallet.
             </p>
             <Button
-              className="bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)] hover:opacity-90"
+              className="gradient-button"
               onClick={() => window.history.back()}
             >
               Go Back
@@ -190,54 +200,71 @@ const AdminPage = () => {
               Monitor and manage the Snarbles ecosystem
             </p>
           </div>
+          
+          <div className="mt-4 md:mt-0">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Last 7 Days
+            </Button>
+          </div>
         </div>
         
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          <Card className="card-hover">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <Users className="h-5 w-5 text-primary mb-2" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
                 <p className="text-xs text-muted-foreground">Total Farmers</p>
                 <p className="text-2xl font-bold">{mockStats.totalFarmers.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+          <Card className="card-hover">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <User className="h-5 w-5 text-primary mb-2" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                  <User className="h-5 w-5 text-primary" />
+                </div>
                 <p className="text-xs text-muted-foreground">Active Farmers</p>
                 <p className="text-2xl font-bold">{mockStats.activeFarmers.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+          <Card className="card-hover">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <BarChart className="h-5 w-5 text-primary mb-2" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                  <BarChart className="h-5 w-5 text-primary" />
+                </div>
                 <p className="text-xs text-muted-foreground">Total Harvests</p>
                 <p className="text-2xl font-bold">{mockStats.totalHarvests.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+          <Card className="card-hover">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <Wallet className="h-5 w-5 text-primary mb-2" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                  <Wallet className="h-5 w-5 text-primary" />
+                </div>
                 <p className="text-xs text-muted-foreground">Total Points</p>
                 <p className="text-2xl font-bold">{mockStats.totalPoints.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
+          <Card className="card-hover">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <Leaf className="h-5 w-5 text-primary mb-2" />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                  <Leaf className="h-5 w-5 text-primary" />
+                </div>
                 <p className="text-xs text-muted-foreground">Total Seeds</p>
                 <p className="text-2xl font-bold">{mockStats.totalSeeds.toLocaleString()}</p>
               </div>
@@ -255,9 +282,12 @@ const AdminPage = () => {
           
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
+              <Card className="card-hover">
                 <CardHeader>
-                  <CardTitle>Weekly Activity</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart className="h-5 w-5 text-primary" />
+                    Weekly Activity
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px]">
@@ -275,16 +305,19 @@ const AdminPage = () => {
                         <XAxis dataKey="name" />
                         <YAxis />
                         <RechartsTooltip contentStyle={{ backgroundColor: 'var(--card)', border: 'none', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                        <Bar dataKey="value" fill="var(--primary)" />
+                        <Bar dataKey="value" fill="var(--primary)" radius={[4, 4, 0, 0]} />
                       </RechartsBarChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="card-hover">
                 <CardHeader>
-                  <CardTitle>Ecosystem Growth</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    Ecosystem Growth
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="h-[300px]">
@@ -311,26 +344,38 @@ const AdminPage = () => {
               </Card>
             </div>
             
-            <Card>
+            <Card className="card-hover">
               <CardHeader>
-                <CardTitle>Key Metrics Summary</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-primary" />
+                  Key Metrics Summary
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-lg bg-card/50 border border-border">
+                  <div className="p-4 rounded-lg border-l-4 border-primary bg-card/50">
                     <h3 className="text-sm font-medium text-muted-foreground mb-1">Conversion Rate</h3>
                     <p className="text-xl font-bold">24.8%</p>
-                    <p className="text-xs text-muted-foreground mt-1">+2.4% from last week</p>
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3 text-green-500" />
+                      +2.4% from last week
+                    </p>
                   </div>
-                  <div className="p-4 rounded-lg bg-card/50 border border-border">
+                  <div className="p-4 rounded-lg border-l-4 border-primary bg-card/50">
                     <h3 className="text-sm font-medium text-muted-foreground mb-1">Retention Rate</h3>
                     <p className="text-xl font-bold">68.2%</p>
-                    <p className="text-xs text-muted-foreground mt-1">+5.1% from last week</p>
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3 text-green-500" />
+                      +5.1% from last week
+                    </p>
                   </div>
-                  <div className="p-4 rounded-lg bg-card/50 border border-border">
+                  <div className="p-4 rounded-lg border-l-4 border-primary bg-card/50">
                     <h3 className="text-sm font-medium text-muted-foreground mb-1">Average Session</h3>
                     <p className="text-xl font-bold">12.4m</p>
-                    <p className="text-xs text-muted-foreground mt-1">+1.2m from last week</p>
+                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3 text-green-500" />
+                      +1.2m from last week
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -339,7 +384,7 @@ const AdminPage = () => {
           
           <TabsContent value="users" className="space-y-6">
             <div className="flex flex-col md:flex-row justify-between gap-4 mb-4">
-              <div className="relative">
+              <div className="relative w-full md:w-auto">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search users..."
@@ -362,24 +407,30 @@ const AdminPage = () => {
             </div>
             
             <Card>
-              <CardContent className="p-0">
+              <CardContent className="p-0 overflow-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Wallet</TableHead>
-                      <TableHead>Level</TableHead>
-                      <TableHead>Points</TableHead>
-                      <TableHead>Plots</TableHead>
-                      <TableHead>Harvests</TableHead>
-                      <TableHead>Seeds</TableHead>
-                      <TableHead>Last Active</TableHead>
+                      <TableHead className="font-medium">Wallet</TableHead>
+                      <TableHead className="font-medium">Level</TableHead>
+                      <TableHead className="font-medium">Points</TableHead>
+                      <TableHead className="font-medium">Plots</TableHead>
+                      <TableHead className="font-medium">Harvests</TableHead>
+                      <TableHead className="font-medium">Seeds</TableHead>
+                      <TableHead className="font-medium">Last Active</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {currentItems.map((user) => (
-                      <TableRow key={user.id}>
+                      <TableRow key={user.id} className="table-row-highlight">
                         <TableCell className="font-mono">{user.wallet}</TableCell>
-                        <TableCell>{user.level}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1.5">
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-xs font-bold text-primary">
+                              {user.level}
+                            </span>
+                          </div>
+                        </TableCell>
                         <TableCell>{user.points.toLocaleString()}</TableCell>
                         <TableCell>{user.plots}</TableCell>
                         <TableCell>{user.harvests}</TableCell>
@@ -402,7 +453,7 @@ const AdminPage = () => {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="text-sm">
+              <span className="text-sm font-medium">
                 Page {currentPage} of {totalPages}
               </span>
               <Button
@@ -417,14 +468,20 @@ const AdminPage = () => {
           </TabsContent>
           
           <TabsContent value="farms" className="space-y-6">
-            <Card>
+            <Card className="card-hover">
               <CardHeader>
-                <CardTitle>Farm Management</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Landmark className="h-5 w-5 text-primary" />
+                  Farm Management
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Farm Distribution</h3>
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <BarChart className="h-4 w-4 text-primary" />
+                      Farm Distribution
+                    </h3>
                     <div className="h-[250px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <RechartsBarChart
@@ -441,43 +498,40 @@ const AdminPage = () => {
                           <XAxis dataKey="name" />
                           <YAxis />
                           <RechartsTooltip contentStyle={{ backgroundColor: 'var(--card)', border: 'none' }} />
-                          <Bar dataKey="value" fill="var(--primary)" />
+                          <Bar dataKey="value" fill="var(--primary)" radius={[4, 4, 0, 0]} />
                         </RechartsBarChart>
                       </ResponsiveContainer>
                     </div>
                   </div>
                   
-                  <div className="p-4 rounded-lg border border-border">
-                    <h3 className="text-lg font-medium mb-4">Farm Health Metrics</h3>
-                    <div className="space-y-4">
+                  <div className="p-6 rounded-lg border border-border bg-card/50">
+                    <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-primary" />
+                      Farm Health Metrics
+                    </h3>
+                    <div className="space-y-6">
                       <div>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between mb-1.5">
                           <span className="text-sm font-medium">Average Harvest Rate</span>
-                          <span className="text-sm font-medium">72%</span>
+                          <span className="text-sm font-medium text-primary">72%</span>
                         </div>
-                        <div className="w-full bg-secondary rounded-full h-2.5">
-                          <div className="bg-primary h-2.5 rounded-full" style={{ width: '72%' }}></div>
-                        </div>
+                        <ProgressBar value={72} max={100} showText={false} />
                       </div>
                       
                       <div>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between mb-1.5">
                           <span className="text-sm font-medium">Plot Utilization</span>
-                          <span className="text-sm font-medium">84%</span>
+                          <span className="text-sm font-medium text-primary">84%</span>
                         </div>
-                        <div className="w-full bg-secondary rounded-full h-2.5">
-                          <div className="bg-primary h-2.5 rounded-full" style={{ width: '84%' }}></div>
-                        </div>
+                        <ProgressBar value={84} max={100} showText={false} />
                       </div>
                       
                       <div>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex justify-between mb-1.5">
                           <span className="text-sm font-medium">Resource Efficiency</span>
-                          <span className="text-sm font-medium">68%</span>
+                          <span className="text-sm font-medium text-primary">68%</span>
                         </div>
-                        <div className="w-full bg-secondary rounded-full h-2.5">
-                          <div className="bg-primary h-2.5 rounded-full" style={{ width: '68%' }}></div>
-                        </div>
+                        <ProgressBar value={68} max={100} showText={false} />
                       </div>
                     </div>
                   </div>
@@ -487,14 +541,20 @@ const AdminPage = () => {
           </TabsContent>
           
           <TabsContent value="transactions" className="space-y-6">
-            <Card>
+            <Card className="card-hover">
               <CardHeader>
-                <CardTitle>Transaction History</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-primary" />
+                  Transaction History
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Transaction Volume</h3>
+                    <h3 className="text-lg font-medium flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      Transaction Volume
+                    </h3>
                     <div className="h-[250px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <LineChart
@@ -517,11 +577,14 @@ const AdminPage = () => {
                     </div>
                   </div>
                   
-                  <div className="p-4 rounded-lg border border-border">
-                    <h3 className="text-lg font-medium mb-4">Recent Transactions</h3>
+                  <div className="p-4 rounded-lg border border-border bg-card/50">
+                    <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                      <Leaf className="h-4 w-4 text-primary" />
+                      Recent Transactions
+                    </h3>
                     <div className="space-y-3">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <div key={i} className="flex justify-between items-center p-3 bg-card/50 rounded-lg">
+                        <div key={i} className="flex justify-between items-center p-3 bg-card/70 rounded-lg border border-border/30 hover:border-border/50 transition-colors">
                           <div className="flex items-center space-x-3">
                             <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
                               <Leaf className="h-5 w-5 text-primary" />
@@ -534,7 +597,7 @@ const AdminPage = () => {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-sm font-medium">+{250 + i * 50} Points</p>
+                            <p className="text-sm font-medium text-green-400">+{250 + i * 50} Points</p>
                             <p className="text-xs text-muted-foreground font-mono">
                               0x{Math.random().toString(36).substring(2, 10)}...
                             </p>

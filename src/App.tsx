@@ -24,30 +24,40 @@ const DarkModeInitializer = () => {
   const location = useLocation();
   
   useEffect(() => {
-    // Check if coming from homepage to app or if on an app page
-    if (location.pathname === '/index' || location.pathname.startsWith('/dashboard') ||
-        location.pathname.startsWith('/farm') || location.pathname.startsWith('/tasks') ||
-        location.pathname.startsWith('/profile') || location.pathname.startsWith('/leaderboard') ||
-        location.pathname.startsWith('/admin') || location.pathname === '/app') {
+    // Enhanced logic to set dark mode as default for app pages
+    const isAppRoute = location.pathname === '/index' || 
+                       location.pathname.startsWith('/dashboard') ||
+                       location.pathname.startsWith('/farm') || 
+                       location.pathname.startsWith('/tasks') ||
+                       location.pathname.startsWith('/profile') || 
+                       location.pathname.startsWith('/leaderboard') ||
+                       location.pathname.startsWith('/admin') || 
+                       location.pathname === '/app';
+    
+    if (isAppRoute) {
       // Set dark mode as default for app pages
       localStorage.setItem('theme', 'dark');
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light-mode');
     }
-  }, [location]);
+  }, [location.pathname]);
   
   return null;
 };
 
-// AppContent component with fixed subdomain routing
+// AppContent component with unified routing
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
   useEffect(() => {
-    // Handle app route redirect
-    if (location.pathname === '/app') {
-      navigate('/dashboard');
+    // Force dark mode when navigating to app from homepage
+    if (location.pathname === '/app' || location.pathname === '/app/') {
+      // Redirect to dashboard and enforce dark mode
+      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light-mode');
+      navigate('/dashboard', { replace: true });
     }
   }, [location, navigate]);
   
@@ -55,9 +65,11 @@ const AppContent = () => {
     <>
       <DarkModeInitializer />
       <Routes>
-        {/* Main routes */}
+        {/* Landing page routes */}
         <Route path="/" element={<Homepage />} />
         <Route path="/home" element={<Homepage />} />
+        
+        {/* App pages */}
         <Route path="/index" element={<Index />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
