@@ -1,6 +1,5 @@
-
 import { useNavigate } from 'react-router-dom';
-import { Tractor, Leaf, Sprout, Droplet, Sparkles, Trophy, ArrowRight, Users, Clock, CheBron, ChevronRight } from 'lucide-react';
+import { Tractor, Leaf, Sprout, Droplet, Sparkles, Trophy, ArrowRight, Users, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ThemeToggle from '@/components/ui/ThemeToggle';
