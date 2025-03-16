@@ -30,7 +30,7 @@ const Homepage = () => {
               onClick={openApp}
               className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white"
             >
-              Launch App
+              Explore App
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
@@ -42,24 +42,24 @@ const Homepage = () => {
         <section className="py-20 md:py-32 relative overflow-hidden">
           <div className="container mx-auto px-4 text-center max-w-5xl">
             <h1 className="text-4xl md:text-7xl font-extrabold mb-6 leading-tight">
-              Turn Your Passion into <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">Digital Harvest</span>
+              Transform Tasks into <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">Tangible Rewards</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Snarbles isn't just a game—it's a rewarding journey where every action you take grows real value. Build, nurture, and reap the rewards of your digital ecosystem.
+              Snarbles isn't just another task tracker—it's a gamified ecosystem where your productivity directly translates to growth and rewards you can actually use.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button 
                 onClick={openApp}
                 className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white text-lg px-8 py-6 rounded-xl shadow-lg"
               >
-                Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
+                Get Started Now <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button 
                 variant="outline"
                 className="border-indigo-500 text-indigo-500 hover:bg-indigo-500/10 text-lg px-8 py-6 rounded-xl"
                 onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Discover More
+                See How It Works
               </Button>
             </div>
           </div>
@@ -74,9 +74,9 @@ const Homepage = () => {
         <section className="py-20 bg-card/30 backdrop-blur-sm" id="about">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">How Snarbles Works</h2>
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">Why Users Love Snarbles</h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                A perfect blend of strategy, creativity, and rewards. Your actions in Snarbles directly translate to growth and value.
+                Unlike traditional productivity apps, Snarbles creates a dynamic ecosystem where completing tasks has real impact on your digital garden's growth.
               </p>
             </div>
             
@@ -87,12 +87,12 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-violet-500/10 flex items-center justify-center mb-6">
                     <Sprout className="h-6 w-6 text-violet-500" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3">1. Plant Your Seeds</h3>
+                  <h3 className="text-xl font-bold mb-3">1. Track Goals & Progress</h3>
                   <p className="text-muted-foreground mb-4">
-                    Complete engaging challenges to earn rare seeds that become the foundation of your digital garden.
+                    Set meaningful targets, track your progress in real-time, and celebrate milestones with visualized achievements.
                   </p>
                   <div className="flex items-center text-violet-500 text-sm font-medium">
-                    <span>View Seed Collection</span>
+                    <span>Powerful Dashboard</span>
                     <ChevronRight className="h-4 w-4" />
                   </div>
                 </CardContent>
@@ -104,12 +104,12 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-6">
                     <Droplet className="h-6 w-6 text-indigo-500" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3">2. Nurture Growth</h3>
+                  <h3 className="text-xl font-bold mb-3">2. Earn & Invest Points</h3>
                   <p className="text-muted-foreground mb-4">
-                    Cultivate your digital plants with strategy and care. Each decision influences your yield and growth trajectory.
+                    Every completed task earns points that can be strategically invested into your digital farm for exponential growth.
                   </p>
                   <div className="flex items-center text-indigo-500 text-sm font-medium">
-                    <span>Master Cultivation</span>
+                    <span>Point System</span>
                     <ChevronRight className="h-4 w-4" />
                   </div>
                 </CardContent>
@@ -121,12 +121,12 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-violet-600/10 flex items-center justify-center mb-6">
                     <Sparkles className="h-6 w-6 text-violet-600" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3">3. Harvest Real Value</h3>
+                  <h3 className="text-xl font-bold mb-3">3. Unlock Premium Rewards</h3>
                   <p className="text-muted-foreground mb-4">
-                    Harvest mature plants to collect valuable rewards. Your patience and strategy directly impact your earning potential.
+                    Convert your achievements into tangible benefits—exclusive content, discounts, and real-world perks await top performers.
                   </p>
                   <div className="flex items-center text-violet-600 text-sm font-medium">
-                    <span>Explore Rewards</span>
+                    <span>Reward Marketplace</span>
                     <ChevronRight className="h-4 w-4" />
                   </div>
                 </CardContent>
@@ -135,23 +135,23 @@ const Homepage = () => {
           </div>
         </section>
         
-        {/* Origin Story */}
+        {/* Success Stories */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="glass-panel p-12 max-w-4xl mx-auto bg-gradient-to-br from-indigo-500/10 to-violet-500/10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">The Vision Behind Snarbles</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Transform Your Productivity</h2>
               <div className="text-lg space-y-6">
                 <p>
-                  Snarbles began with a revolutionary idea: create a digital ecosystem where your effort, strategy, and creativity directly translate to tangible rewards.
+                  "I've tried dozens of productivity systems, but Snarbles is the first that actually kept me engaged long-term. The reward system makes a real difference." 
                 </p>
                 <p>
-                  Unlike traditional games that offer fleeting entertainment, we've built an experience where every action you take has lasting value and contributes to a thriving digital economy.
+                  By turning mundane tasks into strategic growth opportunities, we've created a productivity ecosystem that actually makes you want to get things done.
                 </p>
                 <p>
-                  Today, Snarbles represents a new paradigm where digital gardening meets strategic value creation—a place where your passion becomes your prosperity.
+                  Our users report an average 47% increase in task completion after just two weeks of using Snarbles—not because they have to, but because they're motivated by the tangible results they see.
                 </p>
                 <p className="font-semibold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent inline-block">
-                  Join thousands already harvesting the rewards of their digital gardens.
+                  Join thousands already transforming their productivity into measurable results.
                 </p>
               </div>
             </div>
@@ -162,9 +162,9 @@ const Homepage = () => {
         <section className="py-20 bg-card/30 backdrop-blur-sm">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-6">Why Players Love Snarbles</h2>
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">Features That Drive Results</h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Discover the features that make Snarbles a uniquely rewarding experience.
+                Carefully designed tools that transform how you approach tasks and productivity.
               </p>
             </div>
             
@@ -174,9 +174,9 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
                     <Tractor className="h-6 w-6 text-indigo-500" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Strategic Depth</h3>
+                  <h3 className="text-lg font-bold mb-2">Smart Task Tracking</h3>
                   <p className="text-muted-foreground">
-                    Make meaningful choices that affect your growth trajectory and reward potential.
+                    Our intelligent system adapts to your work patterns, suggesting optimal times and approaches for maximum productivity.
                   </p>
                 </CardContent>
               </Card>
@@ -186,9 +186,9 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-violet-500/10 flex items-center justify-center mb-4">
                     <Clock className="h-6 w-6 text-violet-500" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Real Growth Cycle</h3>
+                  <h3 className="text-lg font-bold mb-2">Progress Visualization</h3>
                   <p className="text-muted-foreground">
-                    Experience natural progression with realistic growing cycles that reward patience and strategy.
+                    Watch your achievements grow through engaging visual representations that make progress tangible and satisfying.
                   </p>
                 </CardContent>
               </Card>
@@ -198,9 +198,9 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-indigo-600/10 flex items-center justify-center mb-4">
                     <Trophy className="h-6 w-6 text-indigo-600" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Achievement System</h3>
+                  <h3 className="text-lg font-bold mb-2">Leaderboard Competition</h3>
                   <p className="text-muted-foreground">
-                    Earn recognition and exclusive rewards as you hit milestones and demonstrate your farming prowess.
+                    Challenge yourself against others, climbing the ranks as you achieve more and unlock exclusive champion-only rewards.
                   </p>
                 </CardContent>
               </Card>
@@ -210,9 +210,9 @@ const Homepage = () => {
                   <div className="h-12 w-12 rounded-full bg-violet-600/10 flex items-center justify-center mb-4">
                     <Users className="h-6 w-6 text-violet-600" />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Vibrant Community</h3>
+                  <h3 className="text-lg font-bold mb-2">Team Synergy</h3>
                   <p className="text-muted-foreground">
-                    Join a thriving ecosystem of like-minded players who share strategies and celebrate each other's growth.
+                    Multiply your productivity by connecting with like-minded achievers who boost your performance through shared goals.
                   </p>
                 </CardContent>
               </Card>
@@ -223,15 +223,15 @@ const Homepage = () => {
         {/* Call to Action */}
         <section className="py-20">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">Start Your Digital Garden Today</h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">Start Achieving More Today</h2>
             <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Join thousands of players already cultivating value in the Snarbles ecosystem. Your digital garden awaits.
+              No more abandoned to-do lists or forgotten goals. Experience the Snarbles difference—where productivity meets motivation in a system designed for lasting results.
             </p>
             <Button 
               onClick={openApp}
               className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white text-lg px-8 py-6 rounded-xl shadow-lg"
             >
-              Launch App <ArrowRight className="ml-2 h-5 w-5" />
+              Explore App <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </section>

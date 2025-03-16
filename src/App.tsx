@@ -27,13 +27,11 @@ const DarkModeInitializer = () => {
     // Check if coming from homepage to app
     if (location.pathname === '/index' || location.pathname.startsWith('/dashboard') ||
         location.pathname.startsWith('/farm') || location.pathname.startsWith('/tasks') ||
-        location.pathname.startsWith('/profile') || location.pathname.startsWith('/leaderboard')) {
+        location.pathname.startsWith('/profile') || location.pathname.startsWith('/leaderboard') ||
+        location.pathname === '/app') {
       // Set dark mode as default for app pages
-      const theme = localStorage.getItem('theme');
-      if (!theme) {
-        localStorage.setItem('theme', 'dark');
-        document.documentElement.classList.remove('light-mode');
-      }
+      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.remove('light-mode');
     }
   }, [location]);
   
@@ -43,14 +41,14 @@ const DarkModeInitializer = () => {
 // AppContent component with fixed subdomain routing
 const AppContent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   
   useEffect(() => {
-    // Handle app redirect
-    const currentURL = window.location.href;
-    if (currentURL.includes('/app')) {
+    // Handle app route redirect
+    if (location.pathname === '/app') {
       navigate('/dashboard');
     }
-  }, [navigate]);
+  }, [location, navigate]);
   
   return (
     <>
@@ -69,6 +67,7 @@ const AppContent = () => {
         
         {/* App redirect */}
         <Route path="/app" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/app/*" element={<Navigate to="/dashboard" replace />} />
         
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
