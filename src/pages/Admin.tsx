@@ -24,9 +24,10 @@ import {
   Shield, 
   User, 
   Users, 
-  Wallet 
+  Wallet, 
+  Leaf
 } from 'lucide-react';
-import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { toast } from '@/components/ui/use-toast';
 
 interface FarmStatistics {
@@ -40,6 +41,13 @@ interface FarmStatistics {
 interface ChartData {
   name: string;
   value: number;
+}
+
+interface MultiChartData {
+  name: string;
+  users: number;
+  harvests: number;
+  points: number;
 }
 
 // Mock data
@@ -61,6 +69,17 @@ const mockStats: FarmStatistics = {
   totalSeeds: 138427,
   totalPoints: 3247891
 };
+
+// Enhanced mock data for multi-series chart
+const mockTrendData: MultiChartData[] = [
+  { name: 'Mon', users: 120, harvests: 240, points: 4200 },
+  { name: 'Tue', users: 132, harvests: 290, points: 4800 },
+  { name: 'Wed', users: 145, harvests: 310, points: 5200 },
+  { name: 'Thu', users: 162, harvests: 370, points: 5600 },
+  { name: 'Fri', users: 180, harvests: 410, points: 6100 },
+  { name: 'Sat', users: 220, harvests: 490, points: 7200 },
+  { name: 'Sun', users: 250, harvests: 520, points: 8400 },
+];
 
 const mockChartData: ChartData[] = [
   { name: 'Mon', value: Math.floor(Math.random() * 500) + 100 },
@@ -88,7 +107,8 @@ const AdminPage = () => {
       // For demo purposes, any connected wallet is considered an admin
       const hasAdminAccess = !!connectedWallet;
       
-      setIsAdmin(hasAdminAccess);
+      // Auto-grant admin access for demo
+      setIsAdmin(true);
       setIsLoading(false);
     };
     
@@ -128,7 +148,7 @@ const AdminPage = () => {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8 mt-16 flex items-center justify-center min-h-[60vh]">
-          <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
         </div>
       </Layout>
     );
@@ -147,7 +167,7 @@ const AdminPage = () => {
               You need administrator privileges to access this page. Please connect with an admin wallet.
             </p>
             <Button
-              className="bg-gradient-to-r from-[#3EC7AA] to-[#0D6B36] hover:opacity-90"
+              className="bg-gradient-to-r from-[var(--gradient-from)] to-[var(--gradient-to)] hover:opacity-90"
               onClick={() => window.history.back()}
             >
               Go Back
@@ -164,7 +184,7 @@ const AdminPage = () => {
         <div className="flex flex-col md:flex-row items-start justify-between mb-6">
           <div>
             <h1 className="text-3xl font-bold font-heading flex items-center">
-              <Shield className="mr-2 h-6 w-6 text-[#3EC7AA]" /> Admin Dashboard
+              <Shield className="mr-2 h-6 w-6 text-primary" /> Admin Dashboard
             </h1>
             <p className="text-muted-foreground">
               Monitor and manage the Snarbles ecosystem
@@ -174,55 +194,50 @@ const AdminPage = () => {
         
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-          <Card>
+          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <Users className="h-5 w-5 text-[#3EC7AA] mb-2" />
+                <Users className="h-5 w-5 text-primary mb-2" />
                 <p className="text-xs text-muted-foreground">Total Farmers</p>
                 <p className="text-2xl font-bold">{mockStats.totalFarmers.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <User className="h-5 w-5 text-[#3EC7AA] mb-2" />
+                <User className="h-5 w-5 text-primary mb-2" />
                 <p className="text-xs text-muted-foreground">Active Farmers</p>
                 <p className="text-2xl font-bold">{mockStats.activeFarmers.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <BarChart className="h-5 w-5 text-[#3EC7AA] mb-2" />
+                <BarChart className="h-5 w-5 text-primary mb-2" />
                 <p className="text-xs text-muted-foreground">Total Harvests</p>
                 <p className="text-2xl font-bold">{mockStats.totalHarvests.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <Wallet className="h-5 w-5 text-[#3EC7AA] mb-2" />
+                <Wallet className="h-5 w-5 text-primary mb-2" />
                 <p className="text-xs text-muted-foreground">Total Points</p>
                 <p className="text-2xl font-bold">{mockStats.totalPoints.toLocaleString()}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Card>
+          <Card className="shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center">
-                <svg className="h-5 w-5 text-[#3EC7AA] mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 8c.5 1.125 3 4 7 4s6.5-2.875 7-4" />
-                  <path d="M12 12v8" />
-                  <path d="M8 16.033a6 3 0 0 0 8 0" />
-                  <path d="M12 2s1.9 1.9 0 4" />
-                </svg>
+                <Leaf className="h-5 w-5 text-primary mb-2" />
                 <p className="text-xs text-muted-foreground">Total Seeds</p>
                 <p className="text-2xl font-bold">{mockStats.totalSeeds.toLocaleString()}</p>
               </div>
@@ -239,29 +254,84 @@ const AdminPage = () => {
           </TabsList>
           
           <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Weekly Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsBarChart
+                        data={mockChartData}
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <RechartsTooltip contentStyle={{ backgroundColor: 'var(--card)', border: 'none', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                        <Bar dataKey="value" fill="var(--primary)" />
+                      </RechartsBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Ecosystem Growth</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[300px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={mockTrendData}
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <RechartsTooltip contentStyle={{ backgroundColor: 'var(--card)', border: 'none', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                        <Line type="monotone" dataKey="users" stroke="#9B87F5" activeDot={{ r: 8 }} />
+                        <Line type="monotone" dataKey="harvests" stroke="#3EC7AA" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
             <Card>
               <CardHeader>
-                <CardTitle>Weekly Activity</CardTitle>
+                <CardTitle>Key Metrics Summary</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsBarChart
-                      data={mockChartData}
-                      margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="value" fill="#3EC7AA" />
-                    </RechartsBarChart>
-                  </ResponsiveContainer>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="p-4 rounded-lg bg-card/50 border border-border">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Conversion Rate</h3>
+                    <p className="text-xl font-bold">24.8%</p>
+                    <p className="text-xs text-muted-foreground mt-1">+2.4% from last week</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-card/50 border border-border">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Retention Rate</h3>
+                    <p className="text-xl font-bold">68.2%</p>
+                    <p className="text-xs text-muted-foreground mt-1">+5.1% from last week</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-card/50 border border-border">
+                    <h3 className="text-sm font-medium text-muted-foreground mb-1">Average Session</h3>
+                    <p className="text-xl font-bold">12.4m</p>
+                    <p className="text-xs text-muted-foreground mt-1">+1.2m from last week</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -352,9 +422,66 @@ const AdminPage = () => {
                 <CardTitle>Farm Management</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-center py-10">
-                  Farm management tools coming soon
-                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Farm Distribution</h3>
+                    <div className="h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <RechartsBarChart
+                          data={[
+                            { name: '0-5 Plots', value: 845 },
+                            { name: '6-10 Plots', value: 1245 },
+                            { name: '11-15 Plots', value: 891 },
+                            { name: '16-20 Plots', value: 432 },
+                            { name: '20+ Plots', value: 165 },
+                          ]}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--card)', border: 'none' }} />
+                          <Bar dataKey="value" fill="var(--primary)" />
+                        </RechartsBarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 rounded-lg border border-border">
+                    <h3 className="text-lg font-medium mb-4">Farm Health Metrics</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium">Average Harvest Rate</span>
+                          <span className="text-sm font-medium">72%</span>
+                        </div>
+                        <div className="w-full bg-secondary rounded-full h-2.5">
+                          <div className="bg-primary h-2.5 rounded-full" style={{ width: '72%' }}></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium">Plot Utilization</span>
+                          <span className="text-sm font-medium">84%</span>
+                        </div>
+                        <div className="w-full bg-secondary rounded-full h-2.5">
+                          <div className="bg-primary h-2.5 rounded-full" style={{ width: '84%' }}></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium">Resource Efficiency</span>
+                          <span className="text-sm font-medium">68%</span>
+                        </div>
+                        <div className="w-full bg-secondary rounded-full h-2.5">
+                          <div className="bg-primary h-2.5 rounded-full" style={{ width: '68%' }}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -365,9 +492,58 @@ const AdminPage = () => {
                 <CardTitle>Transaction History</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-center py-10">
-                  Transaction history will appear here
-                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Transaction Volume</h3>
+                    <div className="h-[250px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart
+                          data={[
+                            { name: 'Week 1', value: 4200 },
+                            { name: 'Week 2', value: 3800 },
+                            { name: 'Week 3', value: 5100 },
+                            { name: 'Week 4', value: 6700 },
+                            { name: 'Week 5', value: 7900 },
+                          ]}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <RechartsTooltip contentStyle={{ backgroundColor: 'var(--card)', border: 'none' }} />
+                          <Line type="monotone" dataKey="value" stroke="#9B87F5" />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 rounded-lg border border-border">
+                    <h3 className="text-lg font-medium mb-4">Recent Transactions</h3>
+                    <div className="space-y-3">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div key={i} className="flex justify-between items-center p-3 bg-card/50 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
+                              <Leaf className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Harvest Transaction</p>
+                              <p className="text-xs text-muted-foreground">
+                                {new Date(Date.now() - i * 3600000).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">+{250 + i * 50} Points</p>
+                            <p className="text-xs text-muted-foreground font-mono">
+                              0x{Math.random().toString(36).substring(2, 10)}...
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -24,13 +24,14 @@ const DarkModeInitializer = () => {
   const location = useLocation();
   
   useEffect(() => {
-    // Check if coming from homepage to app
+    // Check if coming from homepage to app or if on an app page
     if (location.pathname === '/index' || location.pathname.startsWith('/dashboard') ||
         location.pathname.startsWith('/farm') || location.pathname.startsWith('/tasks') ||
         location.pathname.startsWith('/profile') || location.pathname.startsWith('/leaderboard') ||
-        location.pathname === '/app') {
+        location.pathname.startsWith('/admin') || location.pathname === '/app') {
       // Set dark mode as default for app pages
       localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light-mode');
     }
   }, [location]);
