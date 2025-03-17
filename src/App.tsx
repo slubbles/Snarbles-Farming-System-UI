@@ -15,6 +15,10 @@ import Profile from "./pages/Profile";
 import Leaderboard from "./pages/Leaderboard";
 import Homepage from "./pages/Homepage";
 import Admin from "./pages/Admin";
+import Market from "./pages/Market";
+import BlackMarket from "./pages/BlackMarket";
+import Rewards from "./pages/Rewards";
+import Settings from "./pages/Settings";
 import { useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -25,17 +29,10 @@ const DarkModeInitializer = () => {
   
   useEffect(() => {
     // Enhanced logic to set dark mode as default for app pages
-    const isAppRoute = location.pathname === '/index' || 
-                       location.pathname.startsWith('/dashboard') ||
-                       location.pathname.startsWith('/farm') || 
-                       location.pathname.startsWith('/tasks') ||
-                       location.pathname.startsWith('/profile') || 
-                       location.pathname.startsWith('/leaderboard') ||
-                       location.pathname.startsWith('/admin') || 
-                       location.pathname === '/app';
+    const isLandingPage = location.pathname === '/' || location.pathname === '/home';
     
-    if (isAppRoute) {
-      // Set dark mode as default for app pages
+    if (!isLandingPage) {
+      // Set dark mode as default for all app pages
       localStorage.setItem('theme', 'dark');
       document.documentElement.classList.add('dark');
       document.documentElement.classList.remove('light-mode');
@@ -74,9 +71,13 @@ const AppContent = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/farm" element={<Farm />} />
+        <Route path="/market" element={<Market />} />
+        <Route path="/black-market" element={<BlackMarket />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/rewards" element={<Rewards />} />
+        <Route path="/settings" element={<Settings />} />
         
         {/* App redirect */}
         <Route path="/app" element={<Navigate to="/dashboard" replace />} />
